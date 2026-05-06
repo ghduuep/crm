@@ -11,15 +11,35 @@ import { entityTagsRoutes } from "./modules/entity-tags/entity-tags.routes";
 import { contactsRoutes } from "./modules/contacts/contacts.routes";
 import { companiesRoutes } from "./modules/companies/companies.routes";
 import { activitiesRoutes } from "./modules/activities/activities.routes";
-import { NotFoundError } from "elysia";
 
 export const db = drizzle(process.env.DATABASE_URL!, { schema });
 
 const app = new Elysia()
   .onError(({ error, code, set }) => {
-    if (error instanceof NotFoundError) {
-      set.status = 404;
-      return { message: error.message };
+    switch (code) {
+      case "NOT_FOUND":
+        set.status = 404;
+        return { code: "NOT_FOUND", message: error.message };
+
+      case "VALIDATION":
+        set.status = 422;
+        return { code: "VALIDATION_ERROR", message: error.message };
+
+      case "PARSE":
+        set.status = 400;
+        return { code: "PARSE_ERROR", message: "Invalid request body" };
+
+      case "INTERNAL_SERVER_ERROR":
+        set.status = 500;
+        return { code: "INTERNAL_ERROR", message: error.message };
+
+      default:
+        console.error(`[Unhandled error] ${code}`, error);
+        set.status = 500;
+        return {
+          code: "INTERNAL_ERROR",
+          message: "An unexpected error occurred",
+        };
     }
   })
   .use(usersRoutes)

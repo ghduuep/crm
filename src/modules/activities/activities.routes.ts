@@ -29,5 +29,4 @@ export const activitiesRoutes = new Elysia({ prefix: "/activities" })
   )
   .delete("/:id", async ({ params }) => activitiesService.delete(params.id), {
     params: t.Object({ id: t.String() }),
-    response: 200,
   });

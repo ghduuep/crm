@@ -1,11 +1,13 @@
 import Elysia from "elysia";
 import { insertTagSchema, selectTagSchema, updateTagSchema } from "../../db/schema";
+import { tagsService } from "./tags.service";
+import { t } from "elysia";
 
 export const tagsRoutes = new Elysia({ prefix: "/tags" })
   .get("/", async () => tagsService.getAll(), {
     response: t.Array(selectTagSchema),
   })
-  .get("/:id", async ({ params }) => tagsService.getById(params), {
+  .get("/:id", async ({ params }) => tagsService.getById(params.id), {
     params: t.Object({ id: t.String() }),
     response: selectTagSchema,
   })
@@ -13,11 +15,11 @@ export const tagsRoutes = new Elysia({ prefix: "/tags" })
     body: insertTagSchema,
     response: selectTagSchema,
   })
-  .patch("/:id", async ({ params, body }) => tagsService.update(params, body), {
+  .patch("/:id", async ({ params, body }) => tagsService.update(params.id, body), {
     params: t.Object({ id: t.String() }),
     body: updateTagSchema,
     response: selectTagSchema,
   })
-  .delete("/:id", async ({ params }) => tagsService.delete(params), {
+  .delete("/:id", async ({ params }) => tagsService.delete(params.id), {
     params: t.Object({ id: t.String() }),
   });

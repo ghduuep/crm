@@ -21,7 +21,7 @@ export const entityTagsService = {
     return response;
   },
   create: async (tag: typeof insertEntityTagSchema.static) => {
-    const response = await db.insert(entityTags).values(tag).returning();
+    const [response] = await db.insert(entityTags).values(tag).returning();
 
     return response;
   },

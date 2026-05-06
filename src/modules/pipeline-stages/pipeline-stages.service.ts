@@ -21,7 +21,7 @@ export const pipelineStagesService = {
     return response;
   },
   create: async (stage: typeof insertPipelineStageSchema.static) => {
-    const result = await db.insert(pipelineStages).values(stage).returning();
+    const [result] = await db.insert(pipelineStages).values(stage).returning();
     return result;
   },
   update: async (

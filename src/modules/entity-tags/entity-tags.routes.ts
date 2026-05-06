@@ -1,23 +1,33 @@
 import Elysia from "elysia";
-import { insertTagSchema, selectTagSchema, updateTagSchema } from "../../db/schema";
+import {
+  insertEntityTagSchema,
+  selectEntityTagSchema,
+  updateEntityTagSchema,
+} from "../../db/schema";
+import { entityTagsService } from "./entity-tags.service";
+import { t } from "elysia";
 
 export const entityTagsRoutes = new Elysia({ prefix: "/entityTags" })
   .get("/", async () => entityTagsService.getAll(), {
-    response: t.Array(selectTagSchema),
+    response: t.Array(selectEntityTagSchema),
   })
-  .get("/:id", async ({ params }) => entityTagsService.getById(params), {
+  .get("/:id", async ({ params }) => entityTagsService.getById(params.id), {
     params: t.Object({ id: t.String() }),
-    response: selectTagSchema,
+    response: selectEntityTagSchema,
   })
   .post("/", async ({ body }) => entityTagsService.create(body), {
-    body: insertTagSchema,
-    response: selectTagSchema,
+    body: insertEntityTagSchema,
+    response: selectEntityTagSchema,
   })
-  .patch("/:id", async ({ params, body }) => entityTagsService.update(params, body), {
-    params: t.Object({ id: t.String() }),
-    body: updateTagSchema,
-    response: selectTagSchema,
-  })
-  .delete("/:id", async ({ params }) => entityTagsService.delete(params), {
+  .patch(
+    "/:id",
+    async ({ params, body }) => entityTagsService.update(params.id, body),
+    {
+      params: t.Object({ id: t.String() }),
+      body: updateEntityTagSchema,
+      response: selectEntityTagSchema,
+    },
+  )
+  .delete("/:id", async ({ params }) => entityTagsService.delete(params.id), {
     params: t.Object({ id: t.String() }),
   });

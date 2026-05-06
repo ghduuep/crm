@@ -93,6 +93,7 @@ export const insertContactSchema = createInsertSchema(contacts, {
   name: t.String(),
   email: t.String({ format: "email" }),
   phone: t.String({ minLength: 8 }),
+  position: t.UnionEnum(positionEnum.enumValues),
 });
 export const updateContactSchema = t.Partial(insertContactSchema);
 export const selectContactSchema = createSelectSchema(contacts);
@@ -123,6 +124,7 @@ export const insertLeadSchema = createInsertSchema(leads, {
   companyId: t.String(),
   contactId: t.String(),
   ownerId: t.String(),
+  status: t.UnionEnum(leadStatusEnum.enumValues),
   stageId: t.String(),
   value: t.String(),
   expectedCloseDate: t.String(),
@@ -155,6 +157,7 @@ export const insertActivitySchema = createInsertSchema(activities, {
   leadId: t.String(),
   contactId: t.String(),
   userId: t.String(),
+  type: t.UnionEnum(typeEnum.enumValues),
   description: t.String(),
   activity_date: t.Date(),
 });
@@ -190,6 +193,7 @@ export const insertTaskSchema = createInsertSchema(tasks, {
   title: t.String(),
   description: t.String(),
   dueDate: t.Date(),
+  status: t.UnionEnum(taskStatusEnum.enumValues),
 });
 export const updateTaskSchema = t.Partial(insertTaskSchema);
 export const selectTaskSchema = createSelectSchema(tasks);
@@ -239,6 +243,7 @@ export const entityTags = pgTable("entity_tags", {
 
 export const insertEntityTagSchema = createInsertSchema(entityTags, {
   tagId: t.String(),
+  entityType: t.UnionEnum(entityTypeEnum.enumValues),
   entityId: t.String(),
 });
 export const updateEntityTagSchema = t.Partial(insertEntityTagSchema);

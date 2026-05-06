@@ -18,7 +18,7 @@ export const users = pgTable("users", {
   id: varchar("id")
     .$defaultFn(() => createId())
     .primaryKey(),
-  name: varchar("name").notNull(),
+  name: varchar("name"),
   email: varchar("email").notNull().unique(),
   password: varchar("password").notNull(),
   role: rolesEnum(),
@@ -27,10 +27,20 @@ export const users = pgTable("users", {
 });
 
 export const insertUserSchema = createInsertSchema(users, {
+  email: t.String({ format: "email" }),
+  password: t.String({ minLength: 8 }),
+});
+
+export const updateUserRoleSchema = t.Object({
+  role: t.UnionEnum(rolesEnum.enumValues),
+});
+
+export const updateUserProfileSchema = t.Object({
   name: t.String(),
   email: t.String({ format: "email" }),
   password: t.String({ minLength: 8 }),
 });
+
 export const updateUserSchema = t.Partial(insertUserSchema);
 export const selectUserSchema = t.Omit(createSelectSchema(users) as any, [
   "password",

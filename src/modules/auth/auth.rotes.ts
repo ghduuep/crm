@@ -17,10 +17,7 @@ export const authRoutes = new Elysia()
       return { token };
     },
     {
-      body: t.Object({
-        email: t.String({ format: "email" }),
-        password: t.String({ minLength: 8 }),
-      }),
+      body: insertUserSchema,
     },
   )
   .post(

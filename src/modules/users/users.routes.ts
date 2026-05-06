@@ -1,8 +1,8 @@
 import Elysia from "elysia";
 import {
-  insertUserSchema,
   selectUserSchema,
-  updateUserSchema,
+  updateUserProfileSchema,
+  updateUserRoleSchema,
 } from "../../db/schema";
 import { usersService } from "./users.service";
 import { t } from "elysia";
@@ -20,7 +20,16 @@ export const usersRoutes = new Elysia({ prefix: "/users" })
     async ({ params, body }) => usersService.update(params.id, body),
     {
       params: t.Object({ id: t.String() }),
-      body: updateUserSchema,
+      body: updateUserProfileSchema,
+      response: selectUserSchema,
+    },
+  )
+  .patch(
+    "/:id/role",
+    async ({ params, body }) => usersService.update(params.id, body),
+    {
+      params: t.Object({ id: t.String() }),
+      body: updateUserRoleSchema,
       response: selectUserSchema,
     },
   )

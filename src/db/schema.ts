@@ -8,6 +8,7 @@ import {
   date,
   text,
 } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
 import { createInsertSchema, createSelectSchema } from "drizzle-typebox";
 import { t } from "elysia";
 import { createId } from "@paralleldrive/cuid2";
@@ -25,6 +26,11 @@ export const users = pgTable("users", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").$onUpdate(() => new Date()),
 });
+
+export const usersRelations = relations(users, ({ many }) => ({
+  leads: many(leads),
+  tasks: many(tasks),
+}));
 
 export const insertUserSchema = createInsertSchema(users, {
   email: t.String({ format: "email" }),
@@ -45,6 +51,7 @@ export const updateUserSchema = t.Partial(insertUserSchema);
 export const selectUserSchema = t.Omit(createSelectSchema(users) as any, [
   "password",
 ]);
+
 export const companies = pgTable("companies", {
   id: varchar("id")
     .$defaultFn(() => createId())
@@ -56,6 +63,11 @@ export const companies = pgTable("companies", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").$onUpdate(() => new Date()),
 });
+
+export const companiesRelations = relations(companies, ({ many }) => ({
+  contacts: many(contacts),
+  leads: many(leads),
+}));
 
 export const insertCompanySchema = createInsertSchema(companies, {
   name: t.String(),
@@ -88,6 +100,15 @@ export const contacts = pgTable("contacts", {
   updatedAt: timestamp("updated_at").$onUpdate(() => new Date()),
 });
 
+export const contactsRelations = relations(contacts, ({ one, many }) => ({
+  company: one(companies, {
+    fields: [contacts.companyId],
+    references: [companies.id],
+  }),
+
+  leads: many(leads),
+}));
+
 export const insertContactSchema = createInsertSchema(contacts, {
   companyId: t.String(),
   name: t.String(),
@@ -118,6 +139,25 @@ export const leads = pgTable("leads", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").$onUpdate(() => new Date()),
 });
+
+export const leadsRelations = relations(leads, ({ one, many }) => ({
+  company: one(companies, {
+    fields: [leads.companyId],
+    references: [companies.id],
+  }),
+  contact: one(contacts, {
+    fields: [leads.contactId],
+    references: [contacts.id],
+  }),
+  owner: one(users, {
+    fields: [leads.ownerId],
+    references: [users.id],
+  }),
+
+  activities: many(activities),
+
+  tasks: many(tasks),
+}));
 
 export const insertLeadSchema = createInsertSchema(leads, {
   title: t.String(),
@@ -153,6 +193,13 @@ export const activities = pgTable("activities", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+export const activitiesRelations = relations(activities, ({ one }) => ({
+  lead: one(leads, {
+    fields: [activities.leadId],
+    references: [leads.id],
+  }),
+}));
+
 export const insertActivitySchema = createInsertSchema(activities, {
   leadId: t.String(),
   contactId: t.String(),
@@ -185,6 +232,21 @@ export const tasks = pgTable("tasks", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").$onUpdate(() => new Date()),
 });
+
+export const tasksRelations = relations(tasks, ({ one }) => ({
+  lead: one(leads, {
+    fields: [tasks.leadId],
+    references: [leads.id],
+  }),
+  contact: one(contacts, {
+    fields: [tasks.contactId],
+    references: [contacts.id],
+  }),
+  assignedTo: one(users, {
+    fields: [tasks.assignedTo],
+    references: [users.id],
+  }),
+}));
 
 export const insertTaskSchema = createInsertSchema(tasks, {
   leadId: t.String(),

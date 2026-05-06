@@ -15,10 +15,6 @@ export const usersRoutes = new Elysia({ prefix: "/users" })
     params: t.Object({ id: t.String() }),
     response: selectUserSchema,
   })
-  .post("/", async ({ body }) => usersService.create(body), {
-    body: insertUserSchema,
-    response: selectUserSchema,
-  })
   .patch(
     "/:id",
     async ({ params, body }) => usersService.update(params.id, body),

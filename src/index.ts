@@ -3,6 +3,9 @@ import "dotenv/config";
 import { drizzle } from "drizzle-orm/node-postgres";
 import * as schema from "./db/schema";
 import { usersRoutes } from "./modules/users/users.routes";
+import { authRoutes } from "./modules/auth/auth.rotes";
+import { authMiddleware } from "./modules/auth/auth.middleware";
+import { authJwt } from "./modules/auth/auth.jwt";
 import { tasksRoutes } from "./modules/tasks/tasks.routes";
 import { tagsRoutes } from "./modules/tags/tags.routes";
 import { pipelineStagesRoutes } from "./modules/pipeline-stages/pipeline-stages.routes";
@@ -42,15 +45,20 @@ const app = new Elysia()
         };
     }
   })
-  .use(usersRoutes)
-  .use(tasksRoutes)
-  .use(tagsRoutes)
-  .use(pipelineStagesRoutes)
-  .use(leadsRoutes)
-  .use(entityTagsRoutes)
-  .use(contactsRoutes)
-  .use(companiesRoutes)
-  .use(activitiesRoutes);
+  .use(authJwt)
+  .use(authRoutes)
+  .guard({ beforeHandle: authMiddleware }, (app) =>
+    app
+      .use(usersRoutes)
+      .use(tasksRoutes)
+      .use(tagsRoutes)
+      .use(pipelineStagesRoutes)
+      .use(leadsRoutes)
+      .use(entityTagsRoutes)
+      .use(contactsRoutes)
+      .use(companiesRoutes)
+      .use(activitiesRoutes),
+  );
 
 console.log(
   `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`,

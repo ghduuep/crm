@@ -1,0 +1,45 @@
+import { eq } from "drizzle-orm";
+import { leads, insertLeadSchema, updateLeadSchema } from "../../db/schema";
+import { db } from "../../index";
+import { NotFoundError } from "elysia";
+
+export const leadsService = {
+  getAll: async () => {
+    return await db.query.leads.findMany();
+  },
+  getById: async (id: string) => {
+    const response = await db.query.leads.findFirst({
+      where: (leads, { eq }) => eq(leads.id, id),
+    });
+
+    if (!response) throw new NotFoundError("Lead not found");
+
+    return response;
+  },
+  create: async (lead: typeof insertLeadSchema.static) => {
+    const [response] = await db.insert(leads).values(lead).returning();
+
+    return response;
+  },
+  update: async (id: string, lead: typeof updateLeadSchema.static) => {
+    const [response] = await db
+      .update(leads)
+      .set(lead)
+      .where(eq(leads.id, id))
+      .returning();
+
+    if (!response) throw new NotFoundError("Lead not found");
+
+    return response;
+  },
+  delete: async (id: string) => {
+    const [response] = await db
+      .delete(leads)
+      .where(eq(leads.id, id))
+      .returning();
+
+    if (!response) throw new NotFoundError("Lead not found");
+
+    return null;
+  },
+};

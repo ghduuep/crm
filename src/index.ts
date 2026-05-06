@@ -58,7 +58,8 @@ const app = new Elysia()
       .use(contactsRoutes)
       .use(companiesRoutes)
       .use(activitiesRoutes),
-  );
+  )
+  .listen(3000);
 
 console.log(
   `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`,

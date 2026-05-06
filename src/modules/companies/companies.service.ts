@@ -21,20 +21,34 @@ export const companiesService = {
     return response;
   },
   create: async (company: typeof insertCompanySchema.static) => {
-    const [response] = await db.insert(companies).values(company).returning();
+    try {
+      const [response] = await db.insert(companies).values(company).returning();
 
-    return response;
+      return response;
+    } catch (err: any) {
+      if (err.code === "23505") {
+        throw new Error("Document already exists");
+      }
+      throw err;
+    }
   },
   update: async (id: string, company: typeof updateCompanySchema.static) => {
-    const [response] = await db
-      .update(companies)
-      .set(company)
-      .where(eq(companies.id, id))
-      .returning();
+    try {
+      const [response] = await db
+        .update(companies)
+        .set(company)
+        .where(eq(companies.id, id))
+        .returning();
 
-    if (!response) throw new NotFoundError("Company not found");
+      if (!response) throw new NotFoundError("Company not found");
 
-    return response;
+      return response;
+    } catch (err: any) {
+      if (err.code === "23505") {
+        throw new Error("Document already exists");
+      }
+      throw err;
+    }
   },
   delete: async (id: string) => {
     const [response] = await db

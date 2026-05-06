@@ -19,20 +19,34 @@ export const usersService = {
   },
 
   create: async (user: typeof insertUserSchema.static) => {
-    const [result] = await db.insert(users).values(user).returning();
-    return result;
+    try {
+      const [result] = await db.insert(users).values(user).returning();
+      return result;
+    } catch (err: any) {
+      if (err.code === "23505") {
+        throw new Error("Email already exists");
+      }
+      throw err;
+    }
   },
 
   update: async (id: string, user: typeof updateUserSchema.static) => {
-    const [result] = await db
-      .update(users)
-      .set(user)
-      .where(eq(users.id, id))
-      .returning();
+    try {
+      const [result] = await db
+        .update(users)
+        .set(user)
+        .where(eq(users.id, id))
+        .returning();
 
-    if (!result) throw new NotFoundError("User not found");
+      if (!result) throw new NotFoundError("User not found");
 
-    return result;
+      return result;
+    } catch (err: any) {
+      if (err.code === "23505") {
+        throw new Error("Email already exists");
+      }
+      throw err;
+    }
   },
 
   delete: async (id: string) => {

@@ -1,11 +1,5 @@
-import { Elysia } from "elysia";
+import { Context, Elysia } from "elysia";
 import "dotenv/config";
-import { drizzle } from "drizzle-orm/node-postgres";
-import * as schema from "./db/schema";
-import { usersRoutes } from "./modules/users/users.routes";
-import { authRoutes } from "./modules/auth/auth.rotes";
-import { authMiddleware } from "./modules/auth/auth.middleware";
-import { authJwt } from "./modules/auth/auth.jwt";
 import { tasksRoutes } from "./modules/tasks/tasks.routes";
 import { tagsRoutes } from "./modules/tags/tags.routes";
 import { pipelineStagesRoutes } from "./modules/pipeline-stages/pipeline-stages.routes";
@@ -14,8 +8,20 @@ import { entityTagsRoutes } from "./modules/entity-tags/entity-tags.routes";
 import { contactsRoutes } from "./modules/contacts/contacts.routes";
 import { companiesRoutes } from "./modules/companies/companies.routes";
 import { activitiesRoutes } from "./modules/activities/activities.routes";
+import { auth } from "./utils/auth";
+import { betterAuth } from "./utils/better-auth";
+import { usersRoutes } from "./modules/users/users.routes";
+import cors from "@elysia/cors";
 
-export const db = drizzle(process.env.DATABASE_URL!, { schema });
+const betterAuthView = (context: Context) => {
+  const BETTER_AUTH_ACCEPT_METHODS = ["POST", "GET"];
+
+  if (BETTER_AUTH_ACCEPT_METHODS.includes(context.request.method)) {
+    return auth.handler(context.request);
+  } else {
+    context.error(405);
+  }
+};
 
 const app = new Elysia()
   .onError(({ error, code, set }) => {
@@ -45,20 +51,25 @@ const app = new Elysia()
         };
     }
   })
-  .use(authJwt)
-  .use(authRoutes)
-  .guard({ beforeHandle: authMiddleware }, (app) =>
-    app
-      .use(usersRoutes)
-      .use(tasksRoutes)
-      .use(tagsRoutes)
-      .use(pipelineStagesRoutes)
-      .use(leadsRoutes)
-      .use(entityTagsRoutes)
-      .use(contactsRoutes)
-      .use(companiesRoutes)
-      .use(activitiesRoutes),
+  .use(
+    cors({
+      origin: "*",
+      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+      allowedHeaders: ["Content-Type", "Authorization"],
+      credentials: true,
+    }),
   )
+  .mount(auth.handler)
+  .use(betterAuth)
+  .use(usersRoutes)
+  .use(tasksRoutes)
+  .use(tagsRoutes)
+  .use(pipelineStagesRoutes)
+  .use(leadsRoutes)
+  .use(entityTagsRoutes)
+  .use(contactsRoutes)
+  .use(companiesRoutes)
+  .use(activitiesRoutes)
   .listen(3000);
 
 console.log(

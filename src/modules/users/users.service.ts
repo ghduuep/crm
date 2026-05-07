@@ -1,4 +1,4 @@
-import { db } from "../../index";
+import { db } from "../../db";
 import { eq } from "drizzle-orm";
 import { users, insertUserSchema, updateUserSchema } from "../../db/schema";
 import { NotFoundError } from "elysia";

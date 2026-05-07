@@ -7,6 +7,7 @@ import {
   decimal,
   date,
   text,
+  boolean,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { createInsertSchema, createSelectSchema } from "drizzle-typebox";
@@ -19,10 +20,11 @@ export const users = pgTable("users", {
   id: varchar("id")
     .$defaultFn(() => createId())
     .primaryKey(),
-  name: varchar("name"),
-  email: varchar("email").notNull().unique(),
-  password: varchar("password").notNull(),
-  role: rolesEnum(),
+  name: text("name"),
+  email: text("email").notNull().unique(),
+  emailVerified: boolean("email_verified").default(false).notNull(),
+  image: text("image"),
+  role: rolesEnum().default("sales"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").$onUpdate(() => new Date()),
 });
@@ -34,7 +36,6 @@ export const usersRelations = relations(users, ({ many }) => ({
 
 export const insertUserSchema = createInsertSchema(users, {
   email: t.String({ format: "email" }),
-  password: t.String({ minLength: 8 }),
 });
 
 export const updateUserRoleSchema = t.Object({
@@ -44,7 +45,8 @@ export const updateUserRoleSchema = t.Object({
 export const updateUserProfileSchema = t.Object({
   name: t.String(),
   email: t.String({ format: "email" }),
-  password: t.String({ minLength: 8 }),
+  emailVerified: t.Boolean(),
+  image: t.String(),
 });
 
 export const updateUserSchema = t.Partial(insertUserSchema);

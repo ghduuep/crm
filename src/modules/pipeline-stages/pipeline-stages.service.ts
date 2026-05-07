@@ -3,7 +3,7 @@ import {
   updatePipelineStageSchema,
   insertPipelineStageSchema,
 } from "../../db/schema";
-import { db } from "../../index";
+import { db } from "../../db";
 import { eq } from "drizzle-orm";
 import { NotFoundError } from "elysia";
 

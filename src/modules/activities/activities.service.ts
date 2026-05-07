@@ -4,7 +4,7 @@ import {
   insertActivitySchema,
   updateActivitySchema,
 } from "../../db/schema";
-import { db } from "../../index";
+import { db } from "../../db";
 import { InternalServerError, NotFoundError } from "elysia";
 
 export const activitiesService = {

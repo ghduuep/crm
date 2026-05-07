@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { tasks, insertTaskSchema, updateTaskSchema } from "../../db/schema";
-import { db } from "../../index";
+import { db } from "../../db";
 import { NotFoundError } from "elysia";
 
 export const tasksService = {

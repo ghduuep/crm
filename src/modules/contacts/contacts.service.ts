@@ -4,7 +4,7 @@ import {
   insertContactSchema,
   updateContactSchema,
 } from "../../db/schema";
-import { db } from "../../index";
+import { db } from "../../db";
 import { NotFoundError } from "elysia";
 
 export const contactsService = {

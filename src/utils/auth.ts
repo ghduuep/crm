@@ -5,6 +5,10 @@ import { users } from "../db/schema";
 import { accounts, sessions, verifications } from "./auth-schema";
 
 export const auth = betterAuth({
+  rateLimit: {
+    window: 10,
+    max: 100,
+  },
   database: drizzleAdapter(db, {
     provider: "pg",
     schema: {

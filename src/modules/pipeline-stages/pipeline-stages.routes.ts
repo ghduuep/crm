@@ -3,7 +3,7 @@ import {
   insertPipelineStageSchema,
   selectPipelineStageSchema,
   updatePipelineStageSchema,
-} from "../../db/schema";
+} from "../../db/schema/index";
 import { pipelineStagesService } from "./pipeline-stages.service";
 import { t } from "elysia";
 

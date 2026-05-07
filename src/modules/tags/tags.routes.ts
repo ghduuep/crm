@@ -1,5 +1,5 @@
 import Elysia from "elysia";
-import { insertTagSchema, selectTagSchema, updateTagSchema } from "../../db/schema";
+import { insertTagSchema, selectTagSchema, updateTagSchema } from "../../db/schema/index";
 import { tagsService } from "./tags.service";
 import { t } from "elysia";
 

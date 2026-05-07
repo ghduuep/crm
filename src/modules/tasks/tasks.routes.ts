@@ -1,5 +1,5 @@
 import Elysia from "elysia";
-import { insertTaskSchema, selectTaskSchema, updateTaskSchema } from "../../db/schema";
+import { insertTaskSchema, selectTaskSchema, updateTaskSchema } from "../../db/schema/index";
 import { tasksService } from "./tasks.service";
 import { t } from "elysia";
 

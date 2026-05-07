@@ -1,5 +1,5 @@
 import Elysia from "elysia";
-import { insertLeadSchema, selectLeadSchema, updateLeadSchema } from "../../db/schema";
+import { insertLeadSchema, selectLeadSchema, updateLeadSchema } from "../../db/schema/index";
 import { leadsService } from "./leads.service";
 import { t } from "elysia";
 

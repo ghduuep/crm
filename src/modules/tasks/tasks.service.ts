@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm";
-import { tasks, insertTaskSchema, updateTaskSchema } from "../../db/schema";
+import { tasks, insertTaskSchema, updateTaskSchema } from "../../db/schema/index";
 import { db } from "../../db";
 import { NotFoundError } from "elysia";
 

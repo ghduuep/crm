@@ -2,7 +2,7 @@ import {
   entityTags,
   insertEntityTagSchema,
   updateEntityTagSchema,
-} from "../../db/schema";
+} from "../../db/schema/index";
 import { db } from "../../db";
 import { eq } from "drizzle-orm";
 import { NotFoundError } from "elysia";

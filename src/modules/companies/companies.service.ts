@@ -3,7 +3,7 @@ import {
   companies,
   insertCompanySchema,
   updateCompanySchema,
-} from "../../db/schema";
+} from "../../db/schema/index";
 import { db } from "../../db";
 import { NotFoundError } from "elysia";
 

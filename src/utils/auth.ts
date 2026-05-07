@@ -1,8 +1,7 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "../db/index";
-import { users } from "../db/schema";
-import { accounts, sessions, verifications } from "./auth-schema";
+import { accounts, sessions, users, verifications } from "../db/schema/index";
 
 export const auth = betterAuth({
   rateLimit: {

@@ -1,6 +1,6 @@
 import { db } from "../../db";
 import { eq } from "drizzle-orm";
-import { users, insertUserSchema, updateUserSchema } from "../../db/schema";
+import { users, insertUserSchema, updateUserSchema } from "../../db/schema/index";
 import { NotFoundError } from "elysia";
 
 export const usersService = {

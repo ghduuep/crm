@@ -4,7 +4,7 @@ import {
   insertActivitySchema,
   selectActivitySchema,
   updateActivitySchema,
-} from "../../db/schema";
+} from "../../db/schema/index";
 import { activitiesService } from "./activities.service";
 
 export const activitiesRoutes = new Elysia({ prefix: "/activities" })

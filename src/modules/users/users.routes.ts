@@ -3,7 +3,7 @@ import {
   selectUserSchema,
   updateUserProfileSchema,
   updateUserRoleSchema,
-} from "../../db/schema";
+} from "../../db/schema/index";
 import { usersService } from "./users.service";
 import { t } from "elysia";
 

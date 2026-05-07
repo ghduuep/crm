@@ -1,6 +1,6 @@
 import Elysia from "elysia";
 import { t } from "elysia";
-import { selectContactSchema, insertContactSchema, updateContactSchema } from "../../db/schema";
+import { selectContactSchema, insertContactSchema, updateContactSchema } from "../../db/schema/index";
 import { contactsService } from "./contacts.service";
 
 export const contactsRoutes = new Elysia({ prefix: "/contacts" })

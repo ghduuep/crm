@@ -4,7 +4,7 @@ import {
   insertLeadSchema,
   updateLeadSchema,
   entityTags,
-} from "../../db/schema";
+} from "../../db/schema/index";
 import { db } from "../../db";
 import { NotFoundError } from "elysia";
 

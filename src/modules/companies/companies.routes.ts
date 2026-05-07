@@ -1,6 +1,6 @@
 import Elysia from "elysia";
 import { t } from "elysia";
-import { insertCompanySchema, selectCompanySchema, updateCompanySchema } from "../../db/schema";
+import { insertCompanySchema, selectCompanySchema, updateCompanySchema } from "../../db/schema/index";
 import { companiesService } from "./companies.service";
 
 export const companiesRoutes = new Elysia({ prefix: "/companies" })

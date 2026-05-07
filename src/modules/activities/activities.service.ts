@@ -3,7 +3,7 @@ import {
   activities,
   insertActivitySchema,
   updateActivitySchema,
-} from "../../db/schema";
+} from "../../db/schema/index";
 import { db } from "../../db";
 import { InternalServerError, NotFoundError } from "elysia";
 

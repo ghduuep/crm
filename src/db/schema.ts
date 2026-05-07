@@ -72,6 +72,9 @@ export const companies = pgTable("companies", {
 export const companiesRelations = relations(companies, ({ many }) => ({
   contacts: many(contacts),
   leads: many(leads),
+  tags: many(entityTags, {
+    relationName: "company_tags",
+  }),
 }));
 
 export const insertCompanySchema = createInsertSchema(companies, {
@@ -112,6 +115,9 @@ export const contactsRelations = relations(contacts, ({ one, many }) => ({
   }),
 
   leads: many(leads),
+  tags: many(entityTags, {
+    relationName: "contact_tags",
+  }),
 }));
 
 export const insertContactSchema = createInsertSchema(contacts, {
@@ -158,10 +164,16 @@ export const leadsRelations = relations(leads, ({ one, many }) => ({
     fields: [leads.ownerId],
     references: [users.id],
   }),
+  stage: one(pipelineStages, {
+    fields: [leads.stageId],
+    references: [pipelineStages.id],
+  }),
 
   activities: many(activities),
-
   tasks: many(tasks),
+  tags: many(entityTags, {
+    relationName: "lead_tags",
+  }),
 }));
 
 export const insertLeadSchema = createInsertSchema(leads, {
@@ -273,6 +285,10 @@ export const pipelineStages = pgTable("pipeline_stages", {
   position: integer("position").notNull(),
 });
 
+export const pipelineStageRelations = relations(pipelineStages, ({ many }) => ({
+  leads: many(leads),
+}));
+
 export const insertPipelineStageSchema = createInsertSchema(pipelineStages, {
   name: t.String(),
   position: t.Integer({ minimum: 0 }),
@@ -286,6 +302,10 @@ export const tags = pgTable("tags", {
     .primaryKey(),
   name: varchar("name").notNull(),
 });
+
+export const tagsRelations = relations(tags, ({ many }) => ({
+  entityTags: many(entityTags),
+}));
 
 export const insertTagSchema = createInsertSchema(tags, {
   name: t.String(),
@@ -307,6 +327,28 @@ export const entityTags = pgTable("entity_tags", {
   entityType: entityTypeEnum(),
   entityId: varchar("entity_id").notNull(),
 });
+
+export const entityTagsRelations = relations(entityTags, ({ one }) => ({
+  tag: one(tags, {
+    fields: [entityTags.tagId],
+    references: [tags.id],
+  }),
+  lead: one(leads, {
+    fields: [entityTags.entityId],
+    references: [leads.id],
+    relationName: "lead_tags",
+  }),
+  contact: one(contacts, {
+    fields: [entityTags.entityId],
+    references: [contacts.id],
+    relationName: "contact_tags",
+  }),
+  company: one(companies, {
+    fields: [entityTags.entityId],
+    references: [companies.id],
+    relationName: "company_tags",
+  }),
+}));
 
 export const insertEntityTagSchema = createInsertSchema(entityTags, {
   tagId: t.String(),

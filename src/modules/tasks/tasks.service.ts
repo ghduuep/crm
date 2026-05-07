@@ -5,11 +5,22 @@ import { NotFoundError } from "elysia";
 
 export const tasksService = {
   getAll: async () => {
-    return await db.query.tasks.findMany();
+    return await db.query.tasks.findMany({
+      with: {
+        lead: true,
+        contact: true,
+        assignedTo: true,
+      },
+    });
   },
   getById: async (id: string) => {
     const response = await db.query.tasks.findFirst({
       where: (tasks, { eq }) => eq(tasks.id, id),
+      with: {
+        lead: true,
+        contact: true,
+        assignedTo: true,
+      },
     });
 
     if (!response) throw new NotFoundError("Task not found");

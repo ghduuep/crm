@@ -9,11 +9,18 @@ import { NotFoundError } from "elysia";
 
 export const contactsService = {
   getAll: async () => {
-    return await db.query.contacts.findMany();
+    return await db.query.contacts.findMany({
+      with: {
+        company: true,
+      }
+    });
   },
   getById: async (id: string) => {
     const response = await db.query.contacts.findFirst({
       where: (contacts, { eq }) => eq(contacts.id, id),
+      with: {
+        company: true,
+      },
     });
 
     if (!response) throw new NotFoundError("Contact not found");

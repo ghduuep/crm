@@ -9,11 +9,22 @@ import { InternalServerError, NotFoundError } from "elysia";
 
 export const activitiesService = {
   getAll: async () => {
-    return await db.query.activities.findMany();
+    return await db.query.activities.findMany({
+      with: {
+        lead: true,
+        contact: true,
+        user: true,
+      },
+    });
   },
   getById: async (id: string) => {
     const activity = await db.query.activities.findFirst({
       where: (activities, { eq }) => eq(activities.id, id),
+      with: {
+        lead: true,
+        contact: true,
+        user: true,
+      },
     });
 
     if (!activity) throw new NotFoundError("Activity not found");

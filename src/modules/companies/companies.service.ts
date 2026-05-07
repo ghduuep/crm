@@ -14,6 +14,9 @@ export const companiesService = {
   getById: async (id: string) => {
     const response = await db.query.companies.findFirst({
       where: (companies, { eq }) => eq(companies.id, id),
+      with: {
+        contacts: true,
+      },
     });
 
     if (!response) throw new NotFoundError("Company not found");

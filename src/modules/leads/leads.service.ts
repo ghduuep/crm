@@ -1,15 +1,41 @@
 import { eq } from "drizzle-orm";
-import { leads, insertLeadSchema, updateLeadSchema } from "../../db/schema";
+import {
+  leads,
+  insertLeadSchema,
+  updateLeadSchema,
+  entityTags,
+} from "../../db/schema";
 import { db } from "../../db";
 import { NotFoundError } from "elysia";
 
 export const leadsService = {
   getAll: async () => {
-    return await db.query.leads.findMany();
+    return await db.query.leads.findMany({
+      with: {
+        company: true,
+        contact: true,
+        owner: true,
+        stage: true,
+      },
+    });
   },
   getById: async (id: string) => {
     const response = await db.query.leads.findFirst({
       where: (leads, { eq }) => eq(leads.id, id),
+      with: {
+        company: true,
+        contact: true,
+        owner: true,
+        stage: true,
+        activities: true,
+        tasks: true,
+        tags: {
+          with: {
+            tag: true,
+          },
+          where: eq(entityTags.entityType, "lead"),
+        },
+      },
     });
 
     if (!response) throw new NotFoundError("Lead not found");

@@ -26,14 +26,3 @@ export const activities = pgTable("activities", {
   activity_date: timestamp("activity_date"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
-
-export const insertActivitySchema = createInsertSchema(activities, {
-  leadId: t.String(),
-  contactId: t.String(),
-  userId: t.String(),
-  type: t.UnionEnum(typeEnum.enumValues),
-  description: t.String(),
-  activity_date: t.Date(),
-});
-export const updateActivitySchema = t.Partial(insertActivitySchema);
-export const selectActivitySchema = createSelectSchema(activities);

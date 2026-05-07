@@ -1,8 +1,8 @@
+import { pipelineStages } from "../../db/schema/index";
 import {
-  pipelineStages,
   updatePipelineStageSchema,
   insertPipelineStageSchema,
-} from "../../db/schema/index";
+} from "./pipeline-stages.dto";
 import { db } from "../../db";
 import { eq } from "drizzle-orm";
 import { NotFoundError } from "elysia";

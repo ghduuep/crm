@@ -3,7 +3,7 @@ import {
   insertEntityTagSchema,
   selectEntityTagSchema,
   updateEntityTagSchema,
-} from "../../db/schema/index";
+} from "./entity-tags.dto";
 import { entityTagsService } from "./entity-tags.service";
 import { t } from "elysia";
 

@@ -1,8 +1,8 @@
+import { entityTags } from "../../db/schema/index";
 import {
-  entityTags,
   insertEntityTagSchema,
   updateEntityTagSchema,
-} from "../../db/schema/index";
+} from "./entity-tags.dto";
 import { db } from "../../db";
 import { eq } from "drizzle-orm";
 import { NotFoundError } from "elysia";

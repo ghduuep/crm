@@ -9,9 +9,3 @@ export const tags = pgTable("tags", {
     .primaryKey(),
   name: varchar("name").notNull(),
 });
-
-export const insertTagSchema = createInsertSchema(tags, {
-  name: t.String(),
-});
-export const updateTagSchema = t.Partial(insertTagSchema);
-export const selectTagSchema = createSelectSchema(tags);

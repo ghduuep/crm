@@ -10,10 +10,3 @@ export const pipelineStages = pgTable("pipeline_stages", {
   name: varchar("name").notNull(),
   position: integer("position").notNull(),
 });
-
-export const insertPipelineStageSchema = createInsertSchema(pipelineStages, {
-  name: t.String(),
-  position: t.Integer({ minimum: 0 }),
-});
-export const updatePipelineStageSchema = t.Partial(insertPipelineStageSchema);
-export const selectPipelineStageSchema = createSelectSchema(pipelineStages);

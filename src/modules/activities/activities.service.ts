@@ -1,9 +1,6 @@
 import { eq } from "drizzle-orm";
-import {
-  activities,
-  insertActivitySchema,
-  updateActivitySchema,
-} from "../../db/schema/index";
+import { activities } from "../../db/schema/index";
+import { insertActivitySchema, updateActivitySchema } from "./activities.dto";
 import { db } from "../../db";
 import { InternalServerError, NotFoundError } from "elysia";
 

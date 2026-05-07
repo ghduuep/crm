@@ -35,16 +35,3 @@ export const leads = pgTable("leads", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").$onUpdate(() => new Date()),
 });
-
-export const insertLeadSchema = createInsertSchema(leads, {
-  title: t.String(),
-  companyId: t.String(),
-  contactId: t.String(),
-  ownerId: t.String(),
-  status: t.UnionEnum(leadStatusEnum.enumValues),
-  stageId: t.String(),
-  value: t.String(),
-  expectedCloseDate: t.String(),
-});
-export const updateLeadSchema = t.Partial(insertLeadSchema);
-export const selectLeadSchema = createSelectSchema(leads);

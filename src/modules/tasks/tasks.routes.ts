@@ -1,5 +1,9 @@
 import Elysia from "elysia";
-import { insertTaskSchema, selectTaskSchema, updateTaskSchema } from "../../db/schema/index";
+import {
+  insertTaskSchema,
+  selectTaskSchema,
+  updateTaskSchema,
+} from "./tasks.dto";
 import { tasksService } from "./tasks.service";
 import { t } from "elysia";
 
@@ -18,12 +22,16 @@ export const tasksRoutes = new Elysia({ prefix: "/tasks" })
     response: selectTaskSchema,
     auth: true,
   })
-  .patch("/:id", async ({ params, body }) => tasksService.update(params.id, body), {
-    params: t.Object({ id: t.String() }),
-    body: updateTaskSchema,
-    response: selectTaskSchema,
-    auth: true,
-  })
+  .patch(
+    "/:id",
+    async ({ params, body }) => tasksService.update(params.id, body),
+    {
+      params: t.Object({ id: t.String() }),
+      body: updateTaskSchema,
+      response: selectTaskSchema,
+      auth: true,
+    },
+  )
   .delete("/:id", async ({ params }) => tasksService.delete(params.id), {
     params: t.Object({ id: t.String() }),
     auth: true,

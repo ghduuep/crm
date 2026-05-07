@@ -1,5 +1,9 @@
 import Elysia from "elysia";
-import { insertLeadSchema, selectLeadSchema, updateLeadSchema } from "../../db/schema/index";
+import {
+  insertLeadSchema,
+  selectLeadSchema,
+  updateLeadSchema,
+} from "./leads.dto";
 import { leadsService } from "./leads.service";
 import { t } from "elysia";
 
@@ -18,12 +22,16 @@ export const leadsRoutes = new Elysia({ prefix: "/leads" })
     response: selectLeadSchema,
     auth: true,
   })
-  .patch("/:id", async ({ params, body }) => leadsService.update(params.id, body), {
-    params: t.Object({ id: t.String() }),
-    body: updateLeadSchema,
-    response: selectLeadSchema,
-    auth: true,
-  })
+  .patch(
+    "/:id",
+    async ({ params, body }) => leadsService.update(params.id, body),
+    {
+      params: t.Object({ id: t.String() }),
+      body: updateLeadSchema,
+      response: selectLeadSchema,
+      auth: true,
+    },
+  )
   .delete("/:id", async ({ params }) => leadsService.delete(params.id), {
     params: t.Object({ id: t.String() }),
     auth: true,

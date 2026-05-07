@@ -1,9 +1,6 @@
 import { eq } from "drizzle-orm";
-import {
-  contacts,
-  insertContactSchema,
-  updateContactSchema,
-} from "../../db/schema/index";
+import { contacts } from "../../db/schema/index";
+import { insertContactSchema, updateContactSchema } from "./contacts.dto";
 import { db } from "../../db";
 import { NotFoundError } from "elysia";
 
@@ -12,7 +9,7 @@ export const contactsService = {
     return await db.query.contacts.findMany({
       with: {
         company: true,
-      }
+      },
     });
   },
   getById: async (id: string) => {

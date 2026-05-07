@@ -25,13 +25,3 @@ export const contacts = pgTable("contacts", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").$onUpdate(() => new Date()),
 });
-
-export const insertContactSchema = createInsertSchema(contacts, {
-  companyId: t.String(),
-  name: t.String(),
-  email: t.String({ format: "email" }),
-  phone: t.String({ minLength: 8 }),
-  position: t.UnionEnum(positionEnum.enumValues),
-});
-export const updateContactSchema = t.Partial(insertContactSchema);
-export const selectContactSchema = createSelectSchema(contacts);

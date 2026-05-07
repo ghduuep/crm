@@ -1,10 +1,6 @@
 import { eq } from "drizzle-orm";
-import {
-  leads,
-  insertLeadSchema,
-  updateLeadSchema,
-  entityTags,
-} from "../../db/schema/index";
+import { leads, entityTags } from "../../db/schema/index";
+import { insertLeadSchema, updateLeadSchema } from "./leads.dto";
 import { db } from "../../db";
 import { NotFoundError } from "elysia";
 

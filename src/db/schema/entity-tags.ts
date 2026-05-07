@@ -18,11 +18,3 @@ export const entityTags = pgTable("entity_tags", {
   entityType: entityTypeEnum(),
   entityId: varchar("entity_id").notNull(),
 });
-
-export const insertEntityTagSchema = createInsertSchema(entityTags, {
-  tagId: t.String(),
-  entityType: t.UnionEnum(entityTypeEnum.enumValues),
-  entityId: t.String(),
-});
-export const updateEntityTagSchema = t.Partial(insertEntityTagSchema);
-export const selectEntityTagSchema = createSelectSchema(entityTags);

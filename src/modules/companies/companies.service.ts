@@ -1,9 +1,6 @@
 import { eq } from "drizzle-orm";
-import {
-  companies,
-  insertCompanySchema,
-  updateCompanySchema,
-} from "../../db/schema/index";
+import { companies } from "../../db/schema/index";
+import { insertCompanySchema, updateCompanySchema } from "./companies.dto";
 import { db } from "../../db";
 import { NotFoundError } from "elysia";
 

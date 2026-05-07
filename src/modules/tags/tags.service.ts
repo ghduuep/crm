@@ -1,4 +1,5 @@
-import { tags, insertTagSchema, updateTagSchema } from "../../db/schema/index";
+import { tags } from "../../db/schema/index";
+import { insertTagSchema, updateTagSchema } from "./tags.dto";
 import { db } from "../../db";
 import { eq } from "drizzle-orm";
 import { NotFoundError } from "elysia";

@@ -215,6 +215,14 @@ export const activitiesRelations = relations(activities, ({ one }) => ({
     fields: [activities.leadId],
     references: [leads.id],
   }),
+  contact: one(contacts, {
+    fields: [activities.contactId],
+    references: [contacts.id],
+  }),
+  user: one(users, {
+    fields: [activities.userId],
+    references: [users.id],
+  }),
 }));
 
 export const insertActivitySchema = createInsertSchema(activities, {

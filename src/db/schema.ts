@@ -13,6 +13,7 @@ import { relations } from "drizzle-orm";
 import { createInsertSchema, createSelectSchema } from "drizzle-typebox";
 import { t } from "elysia";
 import { createId } from "@paralleldrive/cuid2";
+import { accounts, sessions } from "../utils/auth-schema";
 
 export const rolesEnum = pgEnum("role", ["admin", "sales", "manager"]);
 
@@ -30,6 +31,8 @@ export const users = pgTable("users", {
 });
 
 export const usersRelations = relations(users, ({ many }) => ({
+  sessions: many(sessions),
+  accounts: many(accounts),
   leads: many(leads),
   tasks: many(tasks),
 }));

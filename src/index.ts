@@ -12,6 +12,7 @@ import { auth } from "./utils/auth";
 import { betterAuth } from "./utils/better-auth";
 import { usersRoutes } from "./modules/users/users.routes";
 import cors from "@elysia/cors";
+import openapi, { fromTypes } from "@elysia/openapi";
 
 const betterAuthView = (context: Context) => {
   const BETTER_AUTH_ACCEPT_METHODS = ["POST", "GET"];
@@ -60,6 +61,11 @@ const app = new Elysia()
     }),
   )
   .mount(auth.handler)
+  .use(
+    openapi({
+      references: fromTypes(),
+    }),
+  )
   .use(betterAuth)
   .use(usersRoutes)
   .use(tasksRoutes)

@@ -18,6 +18,7 @@ export const leadsRoutes = new Elysia({ prefix: "/leads" })
     },
     {
       response: t.Array(selectLeadListNestedSchema),
+      auth: true,
       permissions: { leads: ["read"] },
     },
   )
@@ -30,12 +31,14 @@ export const leadsRoutes = new Elysia({ prefix: "/leads" })
     {
       params: t.Object({ id: t.String() }),
       response: selectLeadNestedSchema,
+      auth: true,
       permissions: { leads: ["read"] },
     },
   )
   .post("/", async ({ body }) => leadsService.create(body), {
     body: insertLeadSchema,
     response: selectLeadSchema,
+    auth: true,
     permissions: { leads: ["create"] },
   })
   .patch(
@@ -45,10 +48,12 @@ export const leadsRoutes = new Elysia({ prefix: "/leads" })
       params: t.Object({ id: t.String() }),
       body: updateLeadSchema,
       response: selectLeadSchema,
+      auth: true,
       permissions: { leads: ["update"] },
     },
   )
   .delete("/:id", async ({ params }) => leadsService.delete(params.id), {
     params: t.Object({ id: t.String() }),
+    auth: true,
     permissions: { leads: ["delete"] },
   });

@@ -68,7 +68,7 @@ const app = new Elysia()
         info: {
           title: "AuroraCRM",
           version: "1.0.0",
-          description: "API documentation for AuroraCRM",
+          description: "AuroraCRM is a lightweight REST API built with Elysia that exposes endpoints to manage CRM core resources: users, leads, contacts, companies, tasks, tags, pipeline stages, activities and entity-tag relationships. The API follows RESTful conventions with clear JSON responses and structured error codes. Use the included OpenAPI schemas and examples to integrate AuroraCRM with web and mobile apps, automate pipelines, synchronize contacts and companies, and manage tasks and activities programmatically.",
         },
       },
     }),

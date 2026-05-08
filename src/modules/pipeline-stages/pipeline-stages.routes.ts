@@ -7,7 +7,7 @@ import {
 import { pipelineStagesService } from "./pipeline-stages.service";
 import { t } from "elysia";
 
-export const pipelineStagesRoutes = new Elysia({ prefix: "/pipelineStages" })
+export const pipelineStagesRoutes = new Elysia({ prefix: "/pipeline-stages" })
   .get("/", async () => pipelineStagesService.getAll(), {
     response: t.Array(selectPipelineStageSchema),
     auth: true,

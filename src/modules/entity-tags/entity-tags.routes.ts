@@ -12,18 +12,30 @@ export const entityTagsRoutes = new Elysia({ prefix: "/entity-tags" })
     response: t.Array(selectEntityTagSchema),
     auth: true,
     permissions: { entityTags: ["read"] },
+    detail: {
+      summary: "Get all entity tags",
+      tags: ["entity-tags"]
+    },
   })
   .get("/:id", async ({ params }) => entityTagsService.getById(params.id), {
     params: t.Object({ id: t.String() }),
     response: selectEntityTagSchema,
     auth: true,
     permissions: { entityTags: ["read"] },
+    detail: {
+      summary: "Get entity tag by id",
+      tags: ["entity-tags"]
+    },
   })
   .post("/", async ({ body }) => entityTagsService.create(body), {
     body: insertEntityTagSchema,
     response: selectEntityTagSchema,
     auth: true,
     permissions: { entityTags: ["create"] },
+    detail: {
+      summary: "Create entity tag",
+      tags: ["entity-tags"]
+    },
   })
   .patch(
     "/:id",
@@ -34,10 +46,18 @@ export const entityTagsRoutes = new Elysia({ prefix: "/entity-tags" })
       response: selectEntityTagSchema,
       auth: true,
       permissions: { entityTags: ["update"] },
+      detail: {
+        summary: "Update entity tag",
+        tags: ["entity-tags"]
+      },
     },
   )
   .delete("/:id", async ({ params }) => entityTagsService.delete(params.id), {
     params: t.Object({ id: t.String() }),
     auth: true,
     permissions: { entityTags: ["delete"] },
+    detail: {
+      summary: "Delete entity tag",
+      tags: ["entity-tags"]
+    },
   });

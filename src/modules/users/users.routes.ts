@@ -12,12 +12,20 @@ export const usersRoutes = new Elysia({ prefix: "/users" })
     response: t.Array(selectUserSchema),
     auth: true,
     permissions: { users: ["read"] },
+    detail: {
+      summary: "Get all users",
+      tags: ["users"]
+    },
   })
   .get("/:id", async ({ params }) => usersService.getById(params.id), {
     params: t.Object({ id: t.String() }),
     response: selectUserSchema,
     auth: true,
     permissions: { users: ["read"] },
+    detail: {
+      summary: "Get user by id",
+      tags: ["users"]
+    },
   })
   .patch(
     "/:id",
@@ -28,6 +36,10 @@ export const usersRoutes = new Elysia({ prefix: "/users" })
       response: selectUserSchema,
       auth: true,
       permissions: { users: ["update"] },
+      detail: {
+        summary: "Update user",
+        tags: ["users"]
+      },
     },
   )
   .patch(
@@ -39,10 +51,18 @@ export const usersRoutes = new Elysia({ prefix: "/users" })
       response: selectUserSchema,
       auth: true,
       permissions: { users: ["update"] },
+      detail: {
+        summary: "Update user role",
+        tags: ["users"]
+      },
     },
   )
   .delete("/:id", async ({ params }) => usersService.delete(params.id), {
     params: t.Object({ id: t.String() }),
     auth: true,
     permissions: { users: ["delete"] },
+    detail: {
+      summary: "Delete user",
+      tags: ["users"]
+    },
   });

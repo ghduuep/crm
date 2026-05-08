@@ -8,18 +8,30 @@ export const tagsRoutes = new Elysia({ prefix: "/tags" })
     response: t.Array(selectTagSchema),
     permissions: { tags: ["read"] },
     auth: true,
+    detail: {
+      summary: "Get all tags",
+      tags: ["tags"]
+    },
   })
   .get("/:id", async ({ params }) => tagsService.getById(params.id), {
     params: t.Object({ id: t.String() }),
     response: selectTagSchema,
     permissions: { tags: ["read"] },
     auth: true,
+    detail: {
+      summary: "Get tag by id",
+      tags: ["tags"]
+    },
   })
   .post("/", async ({ body }) => tagsService.create(body), {
     body: insertTagSchema,
     response: selectTagSchema,
     permissions: { tags: ["create"] },
     auth: true,
+    detail: {
+      summary: "Create tag",
+      tags: ["tags"]
+    },
   })
   .patch(
     "/:id",
@@ -30,10 +42,18 @@ export const tagsRoutes = new Elysia({ prefix: "/tags" })
       response: selectTagSchema,
       permissions: { tags: ["update"] },
       auth: true,
+      detail: {
+        summary: "Update tag",
+        tags: ["tags"]
+      },
     },
   )
   .delete("/:id", async ({ params }) => tagsService.delete(params.id), {
     params: t.Object({ id: t.String() }),
     permissions: { tags: ["delete"] },
     auth: true,
+    detail: {
+      summary: "Delete tag",
+      tags: ["tags"]
+    },
   });

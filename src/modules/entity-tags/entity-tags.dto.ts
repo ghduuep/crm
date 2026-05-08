@@ -1,11 +1,8 @@
 import { t } from "elysia";
-import { createInsertSchema, createSelectSchema } from "drizzle-typebox";
-import { entityTags, entityTypeEnum } from "../../db/schema/index";
+import {
+  insertEntityTagSchema,
+  updateEntityTagSchema,
+  selectEntityTagSchema,
+} from "../shared/base-schemas";
 
-export const insertEntityTagSchema = createInsertSchema(entityTags, {
-  tagId: t.Nullable(t.String()),
-  entityType: t.Nullable(t.UnionEnum(entityTypeEnum.enumValues)),
-  entityId: t.String(),
-});
-export const updateEntityTagSchema = t.Partial(insertEntityTagSchema);
-export const selectEntityTagSchema = createSelectSchema(entityTags);
+export { insertEntityTagSchema, updateEntityTagSchema, selectEntityTagSchema };

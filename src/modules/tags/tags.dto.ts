@@ -1,9 +1,8 @@
 import { t } from "elysia";
-import { createInsertSchema, createSelectSchema } from "drizzle-typebox";
-import { tags } from "../../db/schema/index";
+import {
+  insertTagSchema,
+  updateTagSchema,
+  selectTagSchema,
+} from "../shared/base-schemas";
 
-export const insertTagSchema = createInsertSchema(tags, {
-  name: t.String(),
-});
-export const updateTagSchema = t.Partial(insertTagSchema);
-export const selectTagSchema = createSelectSchema(tags);
+export { insertTagSchema, updateTagSchema, selectTagSchema };

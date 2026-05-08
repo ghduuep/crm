@@ -11,7 +11,6 @@ export const auth = betterAuth({
     adminPlugin({
       ac,
       roles: roles,
-      defaultRole: "sales",
     }),
   ],
   rateLimit: {

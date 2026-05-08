@@ -7,7 +7,7 @@ import {
 import { entityTagsService } from "./entity-tags.service";
 import { t } from "elysia";
 
-export const entityTagsRoutes = new Elysia({ prefix: "/entityTags" })
+export const entityTagsRoutes = new Elysia({ prefix: "/entity-tags" })
   .get("/", async () => entityTagsService.getAll(), {
     response: t.Array(selectEntityTagSchema),
     auth: true,

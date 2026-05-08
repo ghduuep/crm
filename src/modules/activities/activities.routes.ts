@@ -11,17 +11,17 @@ import { activitiesService } from "./activities.service";
 export const activitiesRoutes = new Elysia({ prefix: "/activities" })
   .get("/", async () => activitiesService.getAll(), {
     response: t.Array(selectActivityNestedSchema),
-    auth: true,
+    permissions: { activities: ["read"] },
   })
   .get("/:id", async ({ params }) => activitiesService.getById(params.id), {
     params: t.Object({ id: t.String() }),
     response: selectActivityNestedSchema,
-    auth: true,
+    permissions: { activities: ["read"] },
   })
   .post("/", async ({ body }) => activitiesService.create(body), {
     body: insertActivitySchema,
     response: selectActivitySchema,
-    auth: true,
+    permissions: { activities: ["create"] },
   })
   .patch(
     "/:id",
@@ -29,10 +29,10 @@ export const activitiesRoutes = new Elysia({ prefix: "/activities" })
     {
       body: updateActivitySchema,
       response: selectActivitySchema,
-      auth: true,
+      permissions: { activities: ["update"] },
     },
   )
   .delete("/:id", async ({ params }) => activitiesService.delete(params.id), {
     params: t.Object({ id: t.String() }),
-    auth: true,
+    permissions: { activities: ["delete"] },
   });

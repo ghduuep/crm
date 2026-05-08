@@ -6,17 +6,17 @@ import { t } from "elysia";
 export const tagsRoutes = new Elysia({ prefix: "/tags" })
   .get("/", async () => tagsService.getAll(), {
     response: t.Array(selectTagSchema),
-    auth: true,
+    permissions: { tags: ["read"] },
   })
   .get("/:id", async ({ params }) => tagsService.getById(params.id), {
     params: t.Object({ id: t.String() }),
     response: selectTagSchema,
-    auth: true,
+    permissions: { tags: ["read"] },
   })
   .post("/", async ({ body }) => tagsService.create(body), {
     body: insertTagSchema,
     response: selectTagSchema,
-    auth: true,
+    permissions: { tags: ["create"] },
   })
   .patch(
     "/:id",
@@ -25,10 +25,10 @@ export const tagsRoutes = new Elysia({ prefix: "/tags" })
       params: t.Object({ id: t.String() }),
       body: updateTagSchema,
       response: selectTagSchema,
-      auth: true,
+      permissions: { tags: ["update"] },
     },
   )
   .delete("/:id", async ({ params }) => tagsService.delete(params.id), {
     params: t.Object({ id: t.String() }),
-    auth: true,
+    permissions: { tags: ["delete"] },
   });

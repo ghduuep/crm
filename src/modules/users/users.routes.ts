@@ -10,12 +10,12 @@ import { t } from "elysia";
 export const usersRoutes = new Elysia({ prefix: "/users" })
   .get("/", async () => usersService.getAll(), {
     response: t.Array(selectUserSchema),
-    auth: true,
+    permissions: { users: ["read"] },
   })
   .get("/:id", async ({ params }) => usersService.getById(params.id), {
     params: t.Object({ id: t.String() }),
     response: selectUserSchema,
-    auth: true,
+    permissions: { users: ["read"] },
   })
   .patch(
     "/:id",
@@ -24,7 +24,7 @@ export const usersRoutes = new Elysia({ prefix: "/users" })
       params: t.Object({ id: t.String() }),
       body: updateUserProfileSchema,
       response: selectUserSchema,
-      auth: true,
+      permissions: { users: ["update"] },
     },
   )
   .patch(
@@ -34,10 +34,10 @@ export const usersRoutes = new Elysia({ prefix: "/users" })
       params: t.Object({ id: t.String() }),
       body: updateUserRoleSchema,
       response: selectUserSchema,
-      auth: true,
+      permissions: { users: ["update"] },
     },
   )
   .delete("/:id", async ({ params }) => usersService.delete(params.id), {
     params: t.Object({ id: t.String() }),
-    auth: true,
+    permissions: { users: ["delete"] },
   });

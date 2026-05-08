@@ -11,17 +11,17 @@ import { companiesService } from "./companies.service";
 export const companiesRoutes = new Elysia({ prefix: "/companies" })
   .get("/", async () => companiesService.getAll(), {
     response: t.Array(selectCompanySchema),
-    auth: true,
+    permissions: { companies: ["read"] },
   })
   .get("/:id", async ({ params }) => companiesService.getById(params.id), {
     params: t.Object({ id: t.String() }),
     response: selectCompanyNestedSchema,
-    auth: true,
+    permissions: { companies: ["read"] },
   })
   .post("/", async ({ body }) => companiesService.create(body), {
     body: insertCompanySchema,
     response: selectCompanySchema,
-    auth: true,
+    permissions: { companies: ["create"] },
   })
   .patch(
     "/:id",
@@ -30,10 +30,10 @@ export const companiesRoutes = new Elysia({ prefix: "/companies" })
       params: t.Object({ id: t.String() }),
       body: updateCompanySchema,
       response: selectCompanySchema,
-      auth: true,
+      permissions: { companies: ["update"] },
     },
   )
   .delete("/:id", async ({ params }) => companiesService.delete(params.id), {
     params: t.Object({ id: t.String() }),
-    auth: true,
+    permissions: { companies: ["delete"] },
   });

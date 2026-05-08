@@ -11,17 +11,17 @@ import { contactsService } from "./contacts.service";
 export const contactsRoutes = new Elysia({ prefix: "/contacts" })
   .get("/", async () => contactsService.getAll(), {
     response: t.Array(selectContactNestedSchema),
-    auth: true,
+    permissions: { contacts: ["read"] },
   })
   .get("/:id", async ({ params }) => contactsService.getById(params.id), {
     params: t.Object({ id: t.String() }),
     response: selectContactNestedSchema,
-    auth: true,
+    permissions: { contacts: ["read"] },
   })
   .post("/", async ({ body }) => contactsService.create(body), {
     body: insertContactSchema,
     response: selectContactSchema,
-    auth: true,
+    permissions: { contacts: ["create"] },
   })
   .patch(
     "/:id",
@@ -30,10 +30,10 @@ export const contactsRoutes = new Elysia({ prefix: "/contacts" })
       params: t.Object({ id: t.String() }),
       body: updateContactSchema,
       response: selectContactSchema,
-      auth: true,
+      permissions: { contacts: ["update"] },
     },
   )
   .delete("/:id", async ({ params }) => contactsService.delete(params.id), {
     params: t.Object({ id: t.String() }),
-    auth: true,
+    permissions: { contacts: ["delete"] },
   });

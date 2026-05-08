@@ -2,8 +2,18 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "../db/index";
 import { accounts, sessions, users, verifications } from "../db/schema/index";
+import { admin as adminPlugin } from "better-auth/plugins";
+import { ac } from "./permissions";
+import { roles } from "./permissions";
 
 export const auth = betterAuth({
+  plugins: [
+    adminPlugin({
+      ac,
+      roles: roles,
+      defaultRole: "sales",
+    }),
+  ],
   rateLimit: {
     window: 10,
     max: 100,

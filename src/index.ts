@@ -64,6 +64,13 @@ const app = new Elysia()
   .use(
     openapi({
       references: fromTypes(),
+      documentation: {
+        info: {
+          title: "AuroraCRM",
+          version: "1.0.0",
+          description: "API documentation for AuroraCRM",
+        },
+      },
     }),
   )
   .use(betterAuth)

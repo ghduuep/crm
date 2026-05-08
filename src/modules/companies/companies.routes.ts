@@ -3,6 +3,7 @@ import { t } from "elysia";
 import {
   insertCompanySchema,
   selectCompanySchema,
+  selectCompanyNestedSchema,
   updateCompanySchema,
 } from "./companies.dto";
 import { companiesService } from "./companies.service";
@@ -14,7 +15,7 @@ export const companiesRoutes = new Elysia({ prefix: "/companies" })
   })
   .get("/:id", async ({ params }) => companiesService.getById(params.id), {
     params: t.Object({ id: t.String() }),
-    response: selectCompanySchema,
+    response: selectCompanyNestedSchema,
     auth: true,
   })
   .post("/", async ({ body }) => companiesService.create(body), {

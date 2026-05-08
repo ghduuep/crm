@@ -2,6 +2,7 @@ import Elysia from "elysia";
 import {
   insertTaskSchema,
   selectTaskSchema,
+  selectTaskNestedSchema,
   updateTaskSchema,
 } from "./tasks.dto";
 import { tasksService } from "./tasks.service";
@@ -9,12 +10,12 @@ import { t } from "elysia";
 
 export const tasksRoutes = new Elysia({ prefix: "/tasks" })
   .get("/", async () => tasksService.getAll(), {
-    response: t.Array(selectTaskSchema),
+    response: t.Array(selectTaskNestedSchema),
     auth: true,
   })
   .get("/:id", async ({ params }) => tasksService.getById(params.id), {
     params: t.Object({ id: t.String() }),
-    response: selectTaskSchema,
+    response: selectTaskNestedSchema,
     auth: true,
   })
   .post("/", async ({ body }) => tasksService.create(body), {

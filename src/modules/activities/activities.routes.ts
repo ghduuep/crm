@@ -3,18 +3,19 @@ import { t } from "elysia";
 import {
   insertActivitySchema,
   selectActivitySchema,
+  selectActivityNestedSchema,
   updateActivitySchema,
 } from "./activities.dto";
 import { activitiesService } from "./activities.service";
 
 export const activitiesRoutes = new Elysia({ prefix: "/activities" })
   .get("/", async () => activitiesService.getAll(), {
-    response: t.Array(selectActivitySchema),
+    response: t.Array(selectActivityNestedSchema),
     auth: true,
   })
   .get("/:id", async ({ params }) => activitiesService.getById(params.id), {
     params: t.Object({ id: t.String() }),
-    response: selectActivitySchema,
+    response: selectActivityNestedSchema,
     auth: true,
   })
   .post("/", async ({ body }) => activitiesService.create(body), {

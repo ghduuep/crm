@@ -5,6 +5,7 @@ import { accounts, sessions, users, verifications } from "../db/schema/index";
 import { admin as adminPlugin } from "better-auth/plugins";
 import { ac } from "./permissions";
 import { roles } from "./permissions";
+import { redis } from "../db/redis";
 
 export const auth = betterAuth({
   plugins: [
@@ -51,4 +52,19 @@ export const auth = betterAuth({
     },
   },
   trustedOrigins: ["http://localhost:3000"],
+  secondaryStorage: {
+    get: async (key: string) => {
+      return await redis.get(key);
+    },
+    set: async (key: string, value: string, ttl?: number) => {
+      await redis.set(key, value);
+
+      if (ttl) {
+        await redis.expire(key, ttl);
+      }
+    },
+    delete: async (key: string) => {
+      await redis.del(key);
+    },
+  }
 });

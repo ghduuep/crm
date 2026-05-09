@@ -1,12 +1,28 @@
 import { tags } from "../../db/schema/index";
 import { insertTagSchema, updateTagSchema } from "./tags.dto";
 import { db } from "../../db";
+import { sql } from "drizzle-orm";
+import {
+  normalizePagination,
+  buildPaginatedResponse,
+  Pagination,
+} from "../../utils/pagination";
 import { eq } from "drizzle-orm";
 import { NotFoundError } from "elysia";
 
 export const tagsService = {
-  getAll: async () => {
-    return await db.query.tags.findMany();
+  getAll: async (pagination: Pagination, baseUrl: string) => {
+    const { limit, offset } = normalizePagination(pagination);
+
+    const data = await db.query.tags.findMany({
+      limit,
+      offset,
+    });
+
+    const [{ count }] = await db.select({ count: sql`count(*)` }).from(tags);
+    const total = Number((count as any) ?? 0);
+
+    return buildPaginatedResponse(data, total, limit, offset, baseUrl);
   },
   getById: async (id: string) => {
     const response = await db.query.tags.findFirst({

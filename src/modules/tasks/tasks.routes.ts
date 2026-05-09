@@ -7,17 +7,30 @@ import {
 } from "./tasks.dto";
 import { tasksService } from "./tasks.service";
 import { t } from "elysia";
+import { paginationSchema, paginatedSchema } from "../../utils/pagination";
 
 export const tasksRoutes = new Elysia({ prefix: "/tasks" })
-  .get("/", async () => tasksService.getAll(), {
-    response: t.Array(selectTaskNestedSchema),
-    auth: true,
-    permissions: { tasks: ["read"] },
-    detail: {
-      summary: "Get all tasks",
-      tags: ["tasks"]
+  .get(
+    "/",
+    async ({ query, request }) =>
+      tasksService.getAll(
+        query as any,
+        new URL(
+          request.url,
+          `http://${request.headers.get("host") ?? "localhost"}`,
+        ).toString(),
+      ),
+    {
+      query: paginationSchema,
+      response: paginatedSchema(selectTaskNestedSchema),
+      auth: true,
+      permissions: { tasks: ["read"] },
+      detail: {
+        summary: "Get all tasks",
+        tags: ["tasks"],
+      },
     },
-  })
+  )
   .get("/:id", async ({ params }) => tasksService.getById(params.id), {
     params: t.Object({ id: t.String() }),
     response: selectTaskNestedSchema,
@@ -25,7 +38,7 @@ export const tasksRoutes = new Elysia({ prefix: "/tasks" })
     permissions: { tasks: ["read"] },
     detail: {
       summary: "Get task by id",
-      tags: ["tasks"]
+      tags: ["tasks"],
     },
   })
   .post("/", async ({ body }) => tasksService.create(body), {
@@ -35,7 +48,7 @@ export const tasksRoutes = new Elysia({ prefix: "/tasks" })
     permissions: { tasks: ["create"] },
     detail: {
       summary: "Create task",
-      tags: ["tasks"]
+      tags: ["tasks"],
     },
   })
   .patch(
@@ -49,7 +62,7 @@ export const tasksRoutes = new Elysia({ prefix: "/tasks" })
       permissions: { tasks: ["update"] },
       detail: {
         summary: "Update task",
-        tags: ["tasks"]
+        tags: ["tasks"],
       },
     },
   )
@@ -59,6 +72,6 @@ export const tasksRoutes = new Elysia({ prefix: "/tasks" })
     permissions: { tasks: ["delete"] },
     detail: {
       summary: "Delete task",
-      tags: ["tasks"]
+      tags: ["tasks"],
     },
   });

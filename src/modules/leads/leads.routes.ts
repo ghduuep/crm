@@ -8,21 +8,27 @@ import {
 } from "./leads.dto";
 import { leadsService } from "./leads.service";
 import { t } from "elysia";
+import { paginationSchema, paginatedSchema } from "../../utils/pagination";
 
 export const leadsRoutes = new Elysia({ prefix: "/leads" })
   .get(
     "/",
-    async () => {
-      const res = await leadsService.getAll();
-      return res as any;
-    },
+    async ({ query, request }) =>
+      leadsService.getAll(
+        query as any,
+        new URL(
+          request.url,
+          `http://${request.headers.get("host") ?? "localhost"}`,
+        ).toString(),
+      ),
     {
-      response: t.Array(selectLeadListNestedSchema),
+      query: paginationSchema,
+      response: paginatedSchema(selectLeadListNestedSchema),
       auth: true,
       permissions: { leads: ["read"] },
       detail: {
         summary: "Get all leads",
-        tags: ["leads"]
+        tags: ["leads"],
       },
     },
   )
@@ -39,7 +45,7 @@ export const leadsRoutes = new Elysia({ prefix: "/leads" })
       permissions: { leads: ["read"] },
       detail: {
         summary: "Get lead by id",
-        tags: ["leads"]
+        tags: ["leads"],
       },
     },
   )
@@ -50,7 +56,7 @@ export const leadsRoutes = new Elysia({ prefix: "/leads" })
     permissions: { leads: ["create"] },
     detail: {
       summary: "Create lead",
-      tags: ["leads"]
+      tags: ["leads"],
     },
   })
   .patch(
@@ -64,7 +70,7 @@ export const leadsRoutes = new Elysia({ prefix: "/leads" })
       permissions: { leads: ["update"] },
       detail: {
         summary: "Update lead",
-        tags: ["leads"]
+        tags: ["leads"],
       },
     },
   )
@@ -74,6 +80,6 @@ export const leadsRoutes = new Elysia({ prefix: "/leads" })
     permissions: { leads: ["delete"] },
     detail: {
       summary: "Delete lead",
-      tags: ["leads"]
+      tags: ["leads"],
     },
   });

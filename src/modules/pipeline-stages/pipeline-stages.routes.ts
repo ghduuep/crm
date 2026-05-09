@@ -6,17 +6,30 @@ import {
 } from "./pipeline-stages.dto";
 import { pipelineStagesService } from "./pipeline-stages.service";
 import { t } from "elysia";
+import { paginationSchema, paginatedSchema } from "../../utils/pagination";
 
 export const pipelineStagesRoutes = new Elysia({ prefix: "/pipeline-stages" })
-  .get("/", async () => pipelineStagesService.getAll(), {
-    response: t.Array(selectPipelineStageSchema),
-    auth: true,
-    permissions: { pipelineStages: ["read"] },
-    detail: {
-      summary: "Get all pipeline stages",
-      tags: ["pipeline-stages"]
+  .get(
+    "/",
+    async ({ query, request }) =>
+      pipelineStagesService.getAll(
+        query as any,
+        new URL(
+          request.url,
+          `http://${request.headers.get("host") ?? "localhost"}`,
+        ).toString(),
+      ),
+    {
+      query: paginationSchema,
+      response: paginatedSchema(selectPipelineStageSchema),
+      auth: true,
+      permissions: { pipelineStages: ["read"] },
+      detail: {
+        summary: "Get all pipeline stages",
+        tags: ["pipeline-stages"],
+      },
     },
-  })
+  )
   .get("/:id", async ({ params }) => pipelineStagesService.getById(params.id), {
     params: t.Object({ id: t.String() }),
     response: selectPipelineStageSchema,
@@ -24,7 +37,7 @@ export const pipelineStagesRoutes = new Elysia({ prefix: "/pipeline-stages" })
     permissions: { pipelineStages: ["read"] },
     detail: {
       summary: "Get pipeline stage by id",
-      tags: ["pipeline-stages"]
+      tags: ["pipeline-stages"],
     },
   })
   .post("/", async ({ body }) => pipelineStagesService.create(body), {
@@ -34,7 +47,7 @@ export const pipelineStagesRoutes = new Elysia({ prefix: "/pipeline-stages" })
     permissions: { pipelineStages: ["create"] },
     detail: {
       summary: "Create pipeline stage",
-      tags: ["pipeline-stages"]
+      tags: ["pipeline-stages"],
     },
   })
   .patch(
@@ -48,7 +61,7 @@ export const pipelineStagesRoutes = new Elysia({ prefix: "/pipeline-stages" })
       permissions: { pipelineStages: ["update"] },
       detail: {
         summary: "Update pipeline stage",
-        tags: ["pipeline-stages"]
+        tags: ["pipeline-stages"],
       },
     },
   )
@@ -61,7 +74,7 @@ export const pipelineStagesRoutes = new Elysia({ prefix: "/pipeline-stages" })
       permissions: { pipelineStages: ["delete"] },
       detail: {
         summary: "Delete pipeline stage",
-        tags: ["pipeline-stages"]
+        tags: ["pipeline-stages"],
       },
     },
   );

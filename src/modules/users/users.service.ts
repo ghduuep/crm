@@ -1,12 +1,28 @@
 import { db } from "../../db";
+import { sql } from "drizzle-orm";
+import {
+  normalizePagination,
+  buildPaginatedResponse,
+  Pagination,
+} from "../../utils/pagination";
 import { eq } from "drizzle-orm";
 import { users } from "../../db/schema/index";
 import { insertUserSchema, updateUserSchema } from "./users.dto";
 import { NotFoundError } from "elysia";
 
 export const usersService = {
-  getAll: async () => {
-    return await db.query.users.findMany();
+  getAll: async (pagination: Pagination, baseUrl: string) => {
+    const { limit, offset } = normalizePagination(pagination);
+
+    const data = await db.query.users.findMany({
+      limit,
+      offset,
+    });
+
+    const [{ count }] = await db.select({ count: sql`count(*)` }).from(users);
+    const total = Number((count as any) ?? 0);
+
+    return buildPaginatedResponse(data, total, limit, offset, baseUrl);
   },
 
   getById: async (id: string) => {

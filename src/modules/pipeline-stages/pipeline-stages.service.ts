@@ -4,12 +4,30 @@ import {
   insertPipelineStageSchema,
 } from "./pipeline-stages.dto";
 import { db } from "../../db";
+import { sql } from "drizzle-orm";
+import {
+  normalizePagination,
+  buildPaginatedResponse,
+  Pagination,
+} from "../../utils/pagination";
 import { eq } from "drizzle-orm";
 import { NotFoundError } from "elysia";
 
 export const pipelineStagesService = {
-  getAll: async () => {
-    return await db.query.pipelineStages.findMany();
+  getAll: async (pagination: Pagination, baseUrl: string) => {
+    const { limit, offset } = normalizePagination(pagination);
+
+    const data = await db.query.pipelineStages.findMany({
+      limit,
+      offset,
+    });
+
+    const [{ count }] = await db
+      .select({ count: sql`count(*)` })
+      .from(pipelineStages);
+    const total = Number((count as any) ?? 0);
+
+    return buildPaginatedResponse(data, total, limit, offset, baseUrl);
   },
   getById: async (id: string) => {
     const response = await db.query.pipelineStages.findFirst({

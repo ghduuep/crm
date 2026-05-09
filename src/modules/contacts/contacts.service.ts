@@ -1,16 +1,32 @@
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { contacts } from "../../db/schema/index";
 import { insertContactSchema, updateContactSchema } from "./contacts.dto";
 import { db } from "../../db";
+import {
+  normalizePagination,
+  buildPaginatedResponse,
+  Pagination,
+} from "../../utils/pagination";
 import { NotFoundError } from "elysia";
 
 export const contactsService = {
-  getAll: async () => {
-    return await db.query.contacts.findMany({
+  getAll: async (pagination: Pagination, baseUrl: string) => {
+    const { limit, offset } = normalizePagination(pagination);
+
+    const data = await db.query.contacts.findMany({
       with: {
         company: true,
       },
+      limit,
+      offset,
     });
+
+    const [{ count }] = await db
+      .select({ count: sql`count(*)` })
+      .from(contacts);
+    const total = Number((count as any) ?? 0);
+
+    return buildPaginatedResponse(data, total, limit, offset, baseUrl);
   },
   getById: async (id: string) => {
     const response = await db.query.contacts.findFirst({

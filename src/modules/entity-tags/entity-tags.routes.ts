@@ -6,17 +6,30 @@ import {
 } from "./entity-tags.dto";
 import { entityTagsService } from "./entity-tags.service";
 import { t } from "elysia";
+import { paginationSchema, paginatedSchema } from "../../utils/pagination";
 
 export const entityTagsRoutes = new Elysia({ prefix: "/entity-tags" })
-  .get("/", async () => entityTagsService.getAll(), {
-    response: t.Array(selectEntityTagSchema),
-    auth: true,
-    permissions: { entityTags: ["read"] },
-    detail: {
-      summary: "Get all entity tags",
-      tags: ["entity-tags"]
+  .get(
+    "/",
+    async ({ query, request }) =>
+      entityTagsService.getAll(
+        query as any,
+        new URL(
+          request.url,
+          `http://${request.headers.get("host") ?? "localhost"}`,
+        ).toString(),
+      ),
+    {
+      query: paginationSchema,
+      response: paginatedSchema(selectEntityTagSchema),
+      auth: true,
+      permissions: { entityTags: ["read"] },
+      detail: {
+        summary: "Get all entity tags",
+        tags: ["entity-tags"],
+      },
     },
-  })
+  )
   .get("/:id", async ({ params }) => entityTagsService.getById(params.id), {
     params: t.Object({ id: t.String() }),
     response: selectEntityTagSchema,
@@ -24,7 +37,7 @@ export const entityTagsRoutes = new Elysia({ prefix: "/entity-tags" })
     permissions: { entityTags: ["read"] },
     detail: {
       summary: "Get entity tag by id",
-      tags: ["entity-tags"]
+      tags: ["entity-tags"],
     },
   })
   .post("/", async ({ body }) => entityTagsService.create(body), {
@@ -34,7 +47,7 @@ export const entityTagsRoutes = new Elysia({ prefix: "/entity-tags" })
     permissions: { entityTags: ["create"] },
     detail: {
       summary: "Create entity tag",
-      tags: ["entity-tags"]
+      tags: ["entity-tags"],
     },
   })
   .patch(
@@ -48,7 +61,7 @@ export const entityTagsRoutes = new Elysia({ prefix: "/entity-tags" })
       permissions: { entityTags: ["update"] },
       detail: {
         summary: "Update entity tag",
-        tags: ["entity-tags"]
+        tags: ["entity-tags"],
       },
     },
   )
@@ -58,6 +71,6 @@ export const entityTagsRoutes = new Elysia({ prefix: "/entity-tags" })
     permissions: { entityTags: ["delete"] },
     detail: {
       summary: "Delete entity tag",
-      tags: ["entity-tags"]
+      tags: ["entity-tags"],
     },
   });

@@ -7,17 +7,34 @@ import {
   updateActivitySchema,
 } from "./activities.dto";
 import { activitiesService } from "./activities.service";
+import {
+  paginationMetaSchema,
+  paginationSchema,
+  paginatedSchema,
+} from "../../utils/pagination";
 
 export const activitiesRoutes = new Elysia({ prefix: "/activities" })
-  .get("/", async () => activitiesService.getAll(), {
-    response: t.Array(selectActivityNestedSchema),
-    auth: true,
-    permissions: { activities: ["read"] },
-    detail: {
-      summary: "Get all activities",
-      tags: ["activities"]
+  .get(
+    "/",
+    async ({ query, request }) =>
+      activitiesService.getAll(
+        query as any,
+        new URL(
+          request.url,
+          `http://${request.headers.get("host") ?? "localhost"}`,
+        ).toString(),
+      ),
+    {
+      query: paginationSchema,
+      response: paginatedSchema(selectActivitySchema),
+      auth: true,
+      permissions: { activities: ["read"] },
+      detail: {
+        summary: "Get all activities",
+        tags: ["activities"],
+      },
     },
-  })
+  )
   .get("/:id", async ({ params }) => activitiesService.getById(params.id), {
     params: t.Object({ id: t.String() }),
     response: selectActivityNestedSchema,
@@ -25,7 +42,7 @@ export const activitiesRoutes = new Elysia({ prefix: "/activities" })
     permissions: { activities: ["read"] },
     detail: {
       summary: "Get activity by id",
-      tags: ["activities"]
+      tags: ["activities"],
     },
   })
   .post("/", async ({ body }) => activitiesService.create(body), {
@@ -35,7 +52,7 @@ export const activitiesRoutes = new Elysia({ prefix: "/activities" })
     permissions: { activities: ["create"] },
     detail: {
       summary: "Create activity",
-      tags: ["activities"]
+      tags: ["activities"],
     },
   })
   .patch(
@@ -48,7 +65,7 @@ export const activitiesRoutes = new Elysia({ prefix: "/activities" })
       permissions: { activities: ["update"] },
       detail: {
         summary: "Update activity",
-        tags: ["activities"]
+        tags: ["activities"],
       },
     },
   )
@@ -58,6 +75,6 @@ export const activitiesRoutes = new Elysia({ prefix: "/activities" })
     permissions: { activities: ["delete"] },
     detail: {
       summary: "Delete activity",
-      tags: ["activities"]
+      tags: ["activities"],
     },
   });

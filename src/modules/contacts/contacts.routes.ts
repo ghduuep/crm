@@ -1,5 +1,6 @@
 import Elysia from "elysia";
 import { t } from "elysia";
+import { paginationSchema, paginatedSchema } from "../../utils/pagination";
 import {
   selectContactSchema,
   selectContactNestedSchema,
@@ -9,15 +10,27 @@ import {
 import { contactsService } from "./contacts.service";
 
 export const contactsRoutes = new Elysia({ prefix: "/contacts" })
-  .get("/", async () => contactsService.getAll(), {
-    response: t.Array(selectContactNestedSchema),
-    permissions: { contacts: ["read"] },
-    auth: true,
-    detail: {
-      summary: "Get all contacts",
-      tags: ["contacts"]
+  .get(
+    "/",
+    async ({ query, request }) =>
+      contactsService.getAll(
+        query as any,
+        new URL(
+          request.url,
+          `http://${request.headers.get("host") ?? "localhost"}`,
+        ).toString(),
+      ),
+    {
+      query: paginationSchema,
+      response: paginatedSchema(selectContactNestedSchema),
+      permissions: { contacts: ["read"] },
+      auth: true,
+      detail: {
+        summary: "Get all contacts",
+        tags: ["contacts"],
+      },
     },
-  })
+  )
   .get("/:id", async ({ params }) => contactsService.getById(params.id), {
     params: t.Object({ id: t.String() }),
     response: selectContactNestedSchema,
@@ -25,7 +38,7 @@ export const contactsRoutes = new Elysia({ prefix: "/contacts" })
     auth: true,
     detail: {
       summary: "Get contact by id",
-      tags: ["contacts"]
+      tags: ["contacts"],
     },
   })
   .post("/", async ({ body }) => contactsService.create(body), {
@@ -35,7 +48,7 @@ export const contactsRoutes = new Elysia({ prefix: "/contacts" })
     auth: true,
     detail: {
       summary: "Create contact",
-      tags: ["contacts"]
+      tags: ["contacts"],
     },
   })
   .patch(
@@ -49,7 +62,7 @@ export const contactsRoutes = new Elysia({ prefix: "/contacts" })
       auth: true,
       detail: {
         summary: "Update contact",
-        tags: ["contacts"]
+        tags: ["contacts"],
       },
     },
   )
@@ -59,6 +72,6 @@ export const contactsRoutes = new Elysia({ prefix: "/contacts" })
     auth: true,
     detail: {
       summary: "Delete contact",
-      tags: ["contacts"]
+      tags: ["contacts"],
     },
   });

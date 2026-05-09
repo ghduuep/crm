@@ -1,18 +1,32 @@
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { tasks } from "../../db/schema/index";
 import { insertTaskSchema, updateTaskSchema } from "./tasks.dto";
 import { db } from "../../db";
+import {
+  normalizePagination,
+  buildPaginatedResponse,
+  Pagination,
+} from "../../utils/pagination";
 import { NotFoundError } from "elysia";
 
 export const tasksService = {
-  getAll: async () => {
-    return await db.query.tasks.findMany({
+  getAll: async (pagination: Pagination, baseUrl: string) => {
+    const { limit, offset } = normalizePagination(pagination);
+
+    const data = await db.query.tasks.findMany({
       with: {
         lead: true,
         contact: true,
         assignedTo: true,
       },
+      limit,
+      offset,
     });
+
+    const [{ count }] = await db.select({ count: sql`count(*)` }).from(tasks);
+    const total = Number((count as any) ?? 0);
+
+    return buildPaginatedResponse(data, total, limit, offset, baseUrl);
   },
   getById: async (id: string) => {
     const response = await db.query.tasks.findFirst({

@@ -2,17 +2,30 @@ import Elysia from "elysia";
 import { insertTagSchema, selectTagSchema, updateTagSchema } from "./tags.dto";
 import { tagsService } from "./tags.service";
 import { t } from "elysia";
+import { paginationSchema, paginatedSchema } from "../../utils/pagination";
 
 export const tagsRoutes = new Elysia({ prefix: "/tags" })
-  .get("/", async () => tagsService.getAll(), {
-    response: t.Array(selectTagSchema),
-    permissions: { tags: ["read"] },
-    auth: true,
-    detail: {
-      summary: "Get all tags",
-      tags: ["tags"]
+  .get(
+    "/",
+    async ({ query, request }) =>
+      tagsService.getAll(
+        query as any,
+        new URL(
+          request.url,
+          `http://${request.headers.get("host") ?? "localhost"}`,
+        ).toString(),
+      ),
+    {
+      query: paginationSchema,
+      response: paginatedSchema(selectTagSchema),
+      permissions: { tags: ["read"] },
+      auth: true,
+      detail: {
+        summary: "Get all tags",
+        tags: ["tags"],
+      },
     },
-  })
+  )
   .get("/:id", async ({ params }) => tagsService.getById(params.id), {
     params: t.Object({ id: t.String() }),
     response: selectTagSchema,
@@ -20,7 +33,7 @@ export const tagsRoutes = new Elysia({ prefix: "/tags" })
     auth: true,
     detail: {
       summary: "Get tag by id",
-      tags: ["tags"]
+      tags: ["tags"],
     },
   })
   .post("/", async ({ body }) => tagsService.create(body), {
@@ -30,7 +43,7 @@ export const tagsRoutes = new Elysia({ prefix: "/tags" })
     auth: true,
     detail: {
       summary: "Create tag",
-      tags: ["tags"]
+      tags: ["tags"],
     },
   })
   .patch(
@@ -44,7 +57,7 @@ export const tagsRoutes = new Elysia({ prefix: "/tags" })
       auth: true,
       detail: {
         summary: "Update tag",
-        tags: ["tags"]
+        tags: ["tags"],
       },
     },
   )
@@ -54,6 +67,6 @@ export const tagsRoutes = new Elysia({ prefix: "/tags" })
     auth: true,
     detail: {
       summary: "Delete tag",
-      tags: ["tags"]
+      tags: ["tags"],
     },
   });

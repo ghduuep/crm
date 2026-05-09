@@ -1,12 +1,29 @@
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { companies } from "../../db/schema/index";
 import { insertCompanySchema, updateCompanySchema } from "./companies.dto";
 import { db } from "../../db";
+import {
+  normalizePagination,
+  buildPaginatedResponse,
+  Pagination,
+} from "../../utils/pagination";
 import { NotFoundError } from "elysia";
 
 export const companiesService = {
-  getAll: async () => {
-    return await db.query.companies.findMany();
+  getAll: async (pagination: Pagination, baseUrl: string) => {
+    const { limit, offset } = normalizePagination(pagination);
+
+    const data = await db.query.companies.findMany({
+      limit,
+      offset,
+    });
+
+    const [{ count }] = await db
+      .select({ count: sql`count(*)` })
+      .from(companies);
+    const total = Number((count as any) ?? 0);
+
+    return buildPaginatedResponse(data, total, limit, offset, baseUrl);
   },
   getById: async (id: string) => {
     const response = await db.query.companies.findFirst({

@@ -1,5 +1,6 @@
 import Elysia from "elysia";
 import { t } from "elysia";
+import { paginationSchema, paginatedSchema } from "../../utils/pagination";
 import {
   insertCompanySchema,
   selectCompanySchema,
@@ -9,15 +10,27 @@ import {
 import { companiesService } from "./companies.service";
 
 export const companiesRoutes = new Elysia({ prefix: "/companies" })
-  .get("/", async () => companiesService.getAll(), {
-    response: t.Array(selectCompanySchema),
-    auth: true,
-    permissions: { companies: ["read"] },
-    detail: {
-      summary: "Get all companies",
-      tags: ["companies"]
+  .get(
+    "/",
+    async ({ query, request }) =>
+      companiesService.getAll(
+        query as any,
+        new URL(
+          request.url,
+          `http://${request.headers.get("host") ?? "localhost"}`,
+        ).toString(),
+      ),
+    {
+      query: paginationSchema,
+      response: paginatedSchema(selectCompanySchema),
+      auth: true,
+      permissions: { companies: ["read"] },
+      detail: {
+        summary: "Get all companies",
+        tags: ["companies"],
+      },
     },
-  })
+  )
   .get("/:id", async ({ params }) => companiesService.getById(params.id), {
     params: t.Object({ id: t.String() }),
     response: selectCompanyNestedSchema,
@@ -25,7 +38,7 @@ export const companiesRoutes = new Elysia({ prefix: "/companies" })
     permissions: { companies: ["read"] },
     detail: {
       summary: "Get company by id",
-      tags: ["companies"]
+      tags: ["companies"],
     },
   })
   .post("/", async ({ body }) => companiesService.create(body), {
@@ -35,7 +48,7 @@ export const companiesRoutes = new Elysia({ prefix: "/companies" })
     permissions: { companies: ["create"] },
     detail: {
       summary: "Create company",
-      tags: ["companies"]
+      tags: ["companies"],
     },
   })
   .patch(
@@ -49,7 +62,7 @@ export const companiesRoutes = new Elysia({ prefix: "/companies" })
       permissions: { companies: ["update"] },
       detail: {
         summary: "Update company",
-        tags: ["companies"]
+        tags: ["companies"],
       },
     },
   )
@@ -59,6 +72,6 @@ export const companiesRoutes = new Elysia({ prefix: "/companies" })
     permissions: { companies: ["delete"] },
     detail: {
       summary: "Delete company",
-      tags: ["companies"]
+      tags: ["companies"],
     },
   });

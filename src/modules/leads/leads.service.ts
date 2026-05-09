@@ -1,19 +1,33 @@
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { leads, entityTags } from "../../db/schema/index";
 import { insertLeadSchema, updateLeadSchema } from "./leads.dto";
 import { db } from "../../db";
+import {
+  normalizePagination,
+  buildPaginatedResponse,
+  Pagination,
+} from "../../utils/pagination";
 import { NotFoundError } from "elysia";
 
 export const leadsService = {
-  getAll: async () => {
-    return await db.query.leads.findMany({
+  getAll: async (pagination: Pagination, baseUrl: string) => {
+    const { limit, offset } = normalizePagination(pagination);
+
+    const data = await db.query.leads.findMany({
       with: {
         company: true,
         contact: true,
         owner: true,
         stage: true,
       },
+      limit,
+      offset,
     });
+
+    const [{ count }] = await db.select({ count: sql`count(*)` }).from(leads);
+    const total = Number((count as any) ?? 0);
+
+    return buildPaginatedResponse(data, total, limit, offset, baseUrl);
   },
   getById: async (id: string) => {
     const response = await db.query.leads.findFirst({

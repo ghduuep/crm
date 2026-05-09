@@ -6,17 +6,30 @@ import {
 } from "./users.dto";
 import { usersService } from "./users.service";
 import { t } from "elysia";
+import { paginationSchema, paginatedSchema } from "../../utils/pagination";
 
 export const usersRoutes = new Elysia({ prefix: "/users" })
-  .get("/", async () => usersService.getAll(), {
-    response: t.Array(selectUserSchema),
-    auth: true,
-    permissions: { users: ["read"] },
-    detail: {
-      summary: "Get all users",
-      tags: ["users"]
+  .get(
+    "/",
+    async ({ query, request }) =>
+      usersService.getAll(
+        query as any,
+        new URL(
+          request.url,
+          `http://${request.headers.get("host") ?? "localhost"}`,
+        ).toString(),
+      ),
+    {
+      query: paginationSchema,
+      response: paginatedSchema(selectUserSchema),
+      auth: true,
+      permissions: { users: ["read"] },
+      detail: {
+        summary: "Get all users",
+        tags: ["users"],
+      },
     },
-  })
+  )
   .get("/:id", async ({ params }) => usersService.getById(params.id), {
     params: t.Object({ id: t.String() }),
     response: selectUserSchema,
@@ -24,7 +37,7 @@ export const usersRoutes = new Elysia({ prefix: "/users" })
     permissions: { users: ["read"] },
     detail: {
       summary: "Get user by id",
-      tags: ["users"]
+      tags: ["users"],
     },
   })
   .patch(
@@ -38,7 +51,7 @@ export const usersRoutes = new Elysia({ prefix: "/users" })
       permissions: { users: ["update"] },
       detail: {
         summary: "Update user",
-        tags: ["users"]
+        tags: ["users"],
       },
     },
   )
@@ -53,7 +66,7 @@ export const usersRoutes = new Elysia({ prefix: "/users" })
       permissions: { users: ["update"] },
       detail: {
         summary: "Update user role",
-        tags: ["users"]
+        tags: ["users"],
       },
     },
   )
@@ -63,6 +76,6 @@ export const usersRoutes = new Elysia({ prefix: "/users" })
     permissions: { users: ["delete"] },
     detail: {
       summary: "Delete user",
-      tags: ["users"]
+      tags: ["users"],
     },
   });

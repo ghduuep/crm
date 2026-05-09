@@ -1,4 +1,4 @@
-import { eq, sql } from "drizzle-orm";
+import { desc, eq, sql } from "drizzle-orm";
 import { leads, entityTags } from "../../db/schema/index";
 import { insertLeadSchema, updateLeadSchema } from "./leads.dto";
 import { db } from "../../db";
@@ -14,6 +14,7 @@ export const leadsService = {
     const { limit, offset } = normalizePagination(pagination);
 
     const data = await db.query.leads.findMany({
+      orderBy: desc(leads.createdAt),
       with: {
         company: true,
         contact: true,

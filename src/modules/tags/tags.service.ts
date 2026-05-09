@@ -7,7 +7,7 @@ import {
   buildPaginatedResponse,
   Pagination,
 } from "../../utils/pagination";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { NotFoundError } from "elysia";
 
 export const tagsService = {
@@ -15,6 +15,7 @@ export const tagsService = {
     const { limit, offset } = normalizePagination(pagination);
 
     const data = await db.query.tags.findMany({
+      orderBy: desc(tags.name),
       limit,
       offset,
     });

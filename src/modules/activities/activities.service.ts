@@ -1,4 +1,4 @@
-import { eq, sql } from "drizzle-orm";
+import { desc, eq, sql } from "drizzle-orm";
 import { activities } from "../../db/schema/index";
 import { insertActivitySchema, updateActivitySchema } from "./activities.dto";
 import { db } from "../../db";
@@ -14,6 +14,7 @@ export const activitiesService = {
     const { limit, offset } = normalizePagination(pagination);
 
     const data = await db.query.activities.findMany({
+      orderBy: desc(activities.createdAt),
       with: {
         lead: true,
         contact: true,

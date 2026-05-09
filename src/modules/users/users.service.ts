@@ -5,7 +5,7 @@ import {
   buildPaginatedResponse,
   Pagination,
 } from "../../utils/pagination";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { users } from "../../db/schema/index";
 import { insertUserSchema, updateUserSchema } from "./users.dto";
 import { NotFoundError } from "elysia";
@@ -15,6 +15,7 @@ export const usersService = {
     const { limit, offset } = normalizePagination(pagination);
 
     const data = await db.query.users.findMany({
+      orderBy: desc(users.createdAt),
       limit,
       offset,
     });

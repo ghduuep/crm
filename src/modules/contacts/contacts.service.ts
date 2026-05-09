@@ -1,4 +1,4 @@
-import { eq, sql } from "drizzle-orm";
+import { desc, eq, sql } from "drizzle-orm";
 import { contacts } from "../../db/schema/index";
 import { insertContactSchema, updateContactSchema } from "./contacts.dto";
 import { db } from "../../db";
@@ -14,6 +14,7 @@ export const contactsService = {
     const { limit, offset } = normalizePagination(pagination);
 
     const data = await db.query.contacts.findMany({
+      orderBy: desc(contacts.createdAt),
       with: {
         company: true,
       },

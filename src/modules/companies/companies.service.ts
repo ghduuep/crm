@@ -1,4 +1,4 @@
-import { eq, sql } from "drizzle-orm";
+import { desc, eq, sql } from "drizzle-orm";
 import { companies } from "../../db/schema/index";
 import { insertCompanySchema, updateCompanySchema } from "./companies.dto";
 import { db } from "../../db";
@@ -14,6 +14,7 @@ export const companiesService = {
     const { limit, offset } = normalizePagination(pagination);
 
     const data = await db.query.companies.findMany({
+      orderBy: desc(companies.createdAt),
       limit,
       offset,
     });

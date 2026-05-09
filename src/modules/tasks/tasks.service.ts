@@ -1,4 +1,4 @@
-import { eq, sql } from "drizzle-orm";
+import { desc, eq, sql } from "drizzle-orm";
 import { tasks } from "../../db/schema/index";
 import { insertTaskSchema, updateTaskSchema } from "./tasks.dto";
 import { db } from "../../db";
@@ -14,6 +14,7 @@ export const tasksService = {
     const { limit, offset } = normalizePagination(pagination);
 
     const data = await db.query.tasks.findMany({
+      orderBy: desc(tasks.createdAt),
       with: {
         lead: true,
         contact: true,

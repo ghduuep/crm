@@ -10,7 +10,7 @@ import {
   buildPaginatedResponse,
   Pagination,
 } from "../../utils/pagination";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { NotFoundError } from "elysia";
 
 export const entityTagsService = {
@@ -18,6 +18,7 @@ export const entityTagsService = {
     const { limit, offset } = normalizePagination(pagination);
 
     const data = await db.query.entityTags.findMany({
+      orderBy: desc(entityTags.entityType),
       limit,
       offset,
     });

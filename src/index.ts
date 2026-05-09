@@ -8,7 +8,7 @@ import { entityTagsRoutes } from "./modules/entity-tags/entity-tags.routes";
 import { contactsRoutes } from "./modules/contacts/contacts.routes";
 import { companiesRoutes } from "./modules/companies/companies.routes";
 import { activitiesRoutes } from "./modules/activities/activities.routes";
-import { auth } from "./utils/auth";
+import { auth, OpenAPI } from "./utils/auth";
 import { betterAuth } from "./utils/better-auth";
 import { usersRoutes } from "./modules/users/users.routes";
 import cors from "@elysia/cors";
@@ -65,6 +65,8 @@ const app = new Elysia()
     openapi({
       references: fromTypes(),
       documentation: {
+        components: await OpenAPI.components,
+        paths: await OpenAPI.getPaths(),
         info: {
           title: "AuroraCRM",
           version: "1.0.0",

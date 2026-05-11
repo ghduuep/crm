@@ -10,6 +10,7 @@ export const statement = {
   tasks: ["create", "read", "update", "delete"],
   entityTags: ["create", "read", "update", "delete"],
   activities: ["create", "read", "update", "delete"],
+  reports: ["read"],
 } as const;
 
 export const ac = createAccessControl(statement);
@@ -24,6 +25,7 @@ export const admin = ac.newRole({
   tasks: ["create", "read", "update", "delete"],
   entityTags: ["create", "read", "update", "delete"],
   activities: ["create", "read", "update", "delete"],
+  reports: ["read"],
 });
 
 export const manager = ac.newRole({
@@ -36,6 +38,7 @@ export const manager = ac.newRole({
   tasks: ["create", "read", "update", "delete"],
   entityTags: ["create", "read", "update", "delete"],
   activities: ["create", "read", "update", "delete"],
+  reports: ["read"],
 });
 
 export const sales = ac.newRole({

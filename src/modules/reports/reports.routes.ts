@@ -6,6 +6,7 @@ export const reportsRoutes = new Elysia({ prefix: "/reports" })
   .use(betterAuth)
   .get("/pipeline", async () => reportsService.getPipelineReport(), {
     auth: true,
+    permissions: { reports: ["read"] },
     detail: {
       summary: "Get pipeline report",
       tags: ["reports"],
@@ -13,6 +14,7 @@ export const reportsRoutes = new Elysia({ prefix: "/reports" })
   })
   .get("/revenue", async () => reportsService.getRevenueReport(), {
     auth: true,
+    permissions: { reports: ["read"] },
     detail: {
       summary: "Get revenue report",
       tags: ["reports"],
@@ -23,6 +25,7 @@ export const reportsRoutes = new Elysia({ prefix: "/reports" })
     async () => reportsService.getSalesPerformanceReport(),
     {
       auth: true,
+      permissions: { reports: ["read"] },
       detail: {
         summary: "Get sales perfomance report",
         tags: ["reports"],
@@ -31,6 +34,7 @@ export const reportsRoutes = new Elysia({ prefix: "/reports" })
   )
   .get("/tasks", async () => reportsService.getTasksReport(), {
     auth: true,
+    permissions: { reports: ["read"] },
     detail: {
       summary: "Get tasks report",
       tags: ["reports"],

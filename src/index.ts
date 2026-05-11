@@ -11,6 +11,7 @@ import { activitiesRoutes } from "./modules/activities/activities.routes";
 import { auth, OpenAPI } from "./utils/auth";
 import { betterAuth } from "./utils/better-auth";
 import { usersRoutes } from "./modules/users/users.routes";
+import { reportsRoutes } from "./modules/reports/reports.routes";
 import cors from "@elysia/cors";
 import openapi, { fromTypes } from "@elysia/openapi";
 
@@ -70,7 +71,8 @@ const app = new Elysia()
         info: {
           title: "AuroraCRM",
           version: "1.0.0",
-          description: "AuroraCRM is a lightweight REST API built with Elysia that exposes endpoints to manage CRM core resources: users, leads, contacts, companies, tasks, tags, pipeline stages, activities and entity-tag relationships. The API follows RESTful conventions with clear JSON responses and structured error codes. Use the included OpenAPI schemas and examples to integrate AuroraCRM with web and mobile apps, automate pipelines, synchronize contacts and companies, and manage tasks and activities programmatically.",
+          description:
+            "AuroraCRM is a lightweight REST API built with Elysia that exposes endpoints to manage CRM core resources: users, leads, contacts, companies, tasks, tags, pipeline stages, activities and entity-tag relationships. The API follows RESTful conventions with clear JSON responses and structured error codes. Use the included OpenAPI schemas and examples to integrate AuroraCRM with web and mobile apps, automate pipelines, synchronize contacts and companies, and manage tasks and activities programmatically.",
         },
       },
     }),
@@ -85,6 +87,7 @@ const app = new Elysia()
   .use(contactsRoutes)
   .use(companiesRoutes)
   .use(activitiesRoutes)
+  .use(reportsRoutes)
   .listen(3000);
 
 console.log(
